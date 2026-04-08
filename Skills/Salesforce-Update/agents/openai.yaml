@@ -1,0 +1,4 @@
+interface:
+  display_name: "Salesforce Update"
+  short_description: "Manual Salesforce opportunity reconciliation from Gmail, Calendar, and Granola"
+  default_prompt: "Use $Salesforce-Update to reconcile recent Salesforce opportunities from Gmail, Google Calendar, and Granola evidence with conservative, evidence-backed stage movement and blunt summary/red-flag handling, then write safe updates with the local helper."
