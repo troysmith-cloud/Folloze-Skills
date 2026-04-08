@@ -19,6 +19,12 @@
       "path": "Skills/Salesforce-Update",
       "enabled": true,
       "requires_restart": true
+    },
+    {
+      "name": "skills-updater",
+      "path": "Skills/skills-updater",
+      "enabled": true,
+      "requires_restart": true
     }
   ]
 }

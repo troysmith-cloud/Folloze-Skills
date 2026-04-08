@@ -18,6 +18,8 @@ The recommended rollout model is:
 
 This is the practical replacement for Codex's built-in GitHub installer, which is install-oriented and not a live team update channel.
 
+If you want the update flow to be callable from inside Codex instead of shell-first, use the `skills-updater` skill in this repo. That skill wraps the repo pull + changed-skill sync process behind one command.
+
 ## What "Automatic Update" Means Here
 
 GitHub push alone will not update a teammate's installed skills.
@@ -86,6 +88,9 @@ Builds branded Folloze sales and customer lifecycle documents such as discovery 
 
 ### `Salesforce-Update`
 Manually reconciles Salesforce open opportunities from Gmail, Google Calendar, and Granola evidence, then writes validated updates through the local Salesforce helper flow.
+
+### `skills-updater`
+Bootstraps or updates the shared Folloze skills repo on a teammate machine, then syncs changed skills into `~/.codex/skills`.
 
 ## Conventions
 
