@@ -150,6 +150,14 @@ def changed_skill_names(files: list[str]) -> set[str]:
     return names
 
 
+def missing_installed_skills(dest: Path, enabled_names: set[str]) -> set[str]:
+    missing: set[str] = set()
+    for skill_name in enabled_names:
+        if not (dest / skill_name).exists():
+            missing.add(skill_name)
+    return missing
+
+
 def sync_skills(
     repo_root: Path,
     dest: Path,
@@ -206,6 +214,8 @@ def main() -> int:
         remote_head = git_output(repo_root, "rev-parse", f"origin/{args.branch}")
         files = changed_files(repo_root, old_head, remote_head)
         skills = sorted(changed_skill_names(files))
+        manifest = load_manifest(repo_root)
+        missing = sorted(missing_installed_skills(dest, enabled_skills(manifest)))
         print(f"current_head: {old_head}")
         print(f"remote_head: {remote_head}")
         if files:
@@ -218,10 +228,16 @@ def main() -> int:
             print("changed_skills:")
             for skill_name in skills:
                 print(f"- {skill_name}")
+        if missing:
+            print("missing_installed_skills:")
+            for skill_name in missing:
+                print(f"- {skill_name}")
         if args.all:
             print("Dry run: would perform a full sync.")
         elif requested:
             print(f"Dry run: would sync requested skills: {', '.join(sorted(requested))}")
+        elif missing:
+            print(f"Dry run: would sync missing skills: {', '.join(missing)}")
         return 0
 
     if old_head is None:
@@ -237,6 +253,7 @@ def main() -> int:
     enabled_after = enabled_skills(manifest_after)
     files = changed_files(repo_root, old_head, new_head)
     skill_changes = changed_skill_names(files)
+    missing_skills = missing_installed_skills(dest, enabled_after)
 
     manifest_changed = "skills-manifest.json" in files or enabled_before != enabled_after
     sync_all = cloned or args.all or (not requested and manifest_changed)
@@ -246,12 +263,14 @@ def main() -> int:
     elif sync_all:
         skills_to_sync = []
     else:
-        skills_to_sync = sorted(skill_changes)
+        skills_to_sync = sorted(skill_changes | missing_skills)
 
     print(f"old_head: {old_head or '(new clone)'}")
     print(f"new_head: {new_head}")
+    if missing_skills:
+        print(f"missing_installed_skills: {', '.join(sorted(missing_skills))}")
 
-    if not cloned and old_head == new_head and not args.all and not requested:
+    if not cloned and old_head == new_head and not args.all and not requested and not missing_skills:
         print("Repo already up to date. No skill changes to sync.")
         return 0
 
