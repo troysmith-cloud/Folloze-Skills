@@ -1,0 +1,4 @@
+interface:
+  display_name: "Folloze Customer Watchlist"
+  short_description: "Weekly Salesforce brief for recent contract signatures and upcoming renewals"
+  default_prompt: "Use $Folloze-Customer-Watchlist to identify customers signed in the last 120 days and customers renewing in the next 30 days."

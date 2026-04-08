@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "skills_root": "Skills",
+  "skills": [
+    {
+      "name": "account-org-chart",
+      "path": "Skills/account-org-chart",
+      "description": "Builds a company org chart workbook across Marketing, Sales, IT, Digital, AI, Strategy, and Product Marketing, then uploads the result into the correct company folder in Google Drive as a native Google Sheet."
+    },
+    {
+      "name": "daily-email-summary-delivery",
+      "path": "Skills/daily-email-summary-delivery",
+      "description": "Use when a recurring or test workflow should review recent Gmail inbox activity, produce a concise action-oriented summary, send it by real email, send it as a Slack DM, and finish with exactly one inbox item."
+    },
+    {
+      "name": "doc",
+      "path": "Skills/doc",
+      "description": "Use when the task involves reading, creating, or editing .docx documents, especially when formatting or layout fidelity matters; prefer python-docx plus the bundled scripts/render_docx.py for visual checks."
+    },
+    {
+      "name": "folloze-sales-doc",
+      "path": "Skills/folloze-sales-doc",
+      "description": "Builds branded Folloze sales and customer lifecycle documents such as discovery prep docs, stakeholder maps, onboarding plans, QBRs, renewal prep docs, and account summaries using the shared Folloze design system."
+    },
+    {
+      "name": "Folloze-Customer-Watchlist",
+      "path": "Skills/Folloze-Customer-Watchlist",
+      "description": "Identify Folloze customers with recently signed contracts and upcoming renewals from Salesforce. Use when a recurring weekly review should find accounts signed within the last 120 days and accounts renewing within the next 30 days."
+    },
+    {
+      "name": "linkedin-operator-content",
+      "path": "Skills/linkedin-operator-content",
+      "description": "Use when the user wants LinkedIn content ideas, post outlines, article drafts, or recurring content generation for a growth-oriented operator voice across martech, SaaS, startups, customer success, leadership, AI, recruiting, professional services, account management, support, net revenue retention, and upsells. Also use when the output should be delivered through Slack and or email."
+    },
+    {
+      "name": "pdf",
+      "path": "Skills/pdf",
+      "description": "Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages and use Python tools such as reportlab, pdfplumber, and pypdf for generation and extraction."
+    },
+    {
+      "name": "playwright",
+      "path": "Skills/playwright",
+      "description": "Use when the task requires automating a real browser from the terminal via playwright-cli or the bundled wrapper script."
+    },
+    {
+      "name": "Salesforce-Update",
+      "path": "Skills/Salesforce-Update",
+      "description": "Manually reconciles Salesforce open opportunities from Gmail, Google Calendar, and Granola evidence, then writes validated updates through the local Salesforce helper flow."
+    },
+    {
+      "name": "skills-updater",
+      "path": "Skills/skills-updater",
+      "description": "Bootstraps or updates the shared Folloze skills repository on a teammate machine, then syncs changed skills into ~/.codex/skills."
+    },
+    {
+      "name": "sora",
+      "path": "Skills/sora",
+      "description": "Use when the user asks to generate, edit, extend, poll, list, download, or delete Sora videos, create reusable non-human Sora character references, or run local multi-video queues via the bundled CLI."
+    },
+    {
+      "name": "spreadsheet",
+      "path": "Skills/spreadsheet",
+      "description": "Use when tasks involve creating, editing, analyzing, or formatting spreadsheets with formula-aware workflows, cached recalculation, and visual review."
+    }
+  ]
+}

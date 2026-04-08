@@ -1,0 +1,33 @@
+{
+  "salesforce": {
+    "org_alias": "your-sf-org-alias"
+  },
+  "rep": {
+    "email": "rep@your-company.com",
+    "initials": "AB",
+    "owner_names": [
+      "Rep Name"
+    ],
+    "owner_emails": [
+      "rep@your-company.com"
+    ]
+  },
+  "notifications": {
+    "failure_alert_to": "rep@your-company.com"
+  },
+  "defaults": {
+    "lookback_hours": 72
+  },
+  "matching": {
+    "internal_domains": [
+      "folloze.com"
+    ],
+    "ignored_domains": [],
+    "ignored_company_keywords": [
+      "partner",
+      "consultant",
+      "advisor",
+      "agency"
+    ]
+  }
+}

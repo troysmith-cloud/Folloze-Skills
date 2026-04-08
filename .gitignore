@@ -1,0 +1,24 @@
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+dist/
+build/
+
+# Local run artifacts and caches
+.tmp/
+tmp/
+logs/
+
+# Skill-local machine state should never be committed
+**/.codex-home/
+**/.tmp-home/
+**/.automation-home/
+**/.sf/
+**/.sfdx/
+**/Library/Caches/
+**/*.log
+
+# Installed local Codex skills target
+.codex-skills-target/
