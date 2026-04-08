@@ -218,6 +218,10 @@ def main() -> int:
             print("changed_skills:")
             for skill_name in skills:
                 print(f"- {skill_name}")
+        if args.all:
+            print("Dry run: would perform a full sync.")
+        elif requested:
+            print(f"Dry run: would sync requested skills: {', '.join(sorted(requested))}")
         return 0
 
     if old_head is None:
