@@ -44,6 +44,7 @@ SETTABLE_FIELDS = {
     "StageName",
     "Next_step__c",
     "Amount",
+    "Summary__c",
     "Competition__c",
     "Next_Call_Date__c",
     "What_s_New_Changed__c",
@@ -183,59 +184,6 @@ def clean_string(value: Any) -> str | None:
     return text or None
 
 
-def clean_string_list(values: Any) -> list[str]:
-    if not isinstance(values, list):
-        return []
-    cleaned: list[str] = []
-    seen: set[str] = set()
-    for value in values:
-        text = clean_string(value)
-        if not text:
-            continue
-        key = text.lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        cleaned.append(text)
-    return cleaned
-
-
-def soql_quote(value: str) -> str:
-    return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'"
-
-
-def owner_scope_from_config(config: dict[str, Any]) -> dict[str, list[str]]:
-    rep = config.get("rep", {})
-    owner_emails = clean_string_list(rep.get("owner_emails"))
-    owner_names = clean_string_list(rep.get("owner_names"))
-    legacy_email = clean_string(rep.get("email"))
-    if legacy_email and legacy_email.lower() not in {entry.lower() for entry in owner_emails}:
-        owner_emails.insert(0, legacy_email)
-    if not owner_emails and not owner_names:
-        raise ScriptError("Missing config value: rep.email or rep.owner_emails or rep.owner_names")
-    return {
-        "owner_emails": owner_emails,
-        "owner_names": owner_names,
-    }
-
-
-def owner_scope_filters(scope: dict[str, list[str]], owner_field: str) -> str:
-    clauses: list[str] = []
-    emails = scope.get("owner_emails", [])
-    names = scope.get("owner_names", [])
-    if emails:
-        quoted = ",".join(soql_quote(entry) for entry in emails)
-        clauses.append(f"{owner_field}.Email IN ({quoted})")
-    if names:
-        quoted = ",".join(soql_quote(entry) for entry in names)
-        clauses.append(f"{owner_field}.Name IN ({quoted})")
-    if not clauses:
-        raise ScriptError("Owner scope is empty")
-    if len(clauses) == 1:
-        return clauses[0]
-    return "(" + " OR ".join(clauses) + ")"
-
-
 def normalize_plan_payload(plan: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
     normalized = copy.deepcopy(plan)
     warnings: list[str] = []
@@ -275,6 +223,7 @@ def load_config() -> tuple[Path, dict[str, Any]]:
         raise ScriptError(f"Invalid JSON in config file {config_path}: {exc}") from exc
     required = [
         ("salesforce", "org_alias"),
+        ("rep", "email"),
         ("rep", "initials"),
         ("notifications", "failure_alert_to"),
     ]
@@ -287,22 +236,12 @@ def load_config() -> tuple[Path, dict[str, Any]]:
     config["matching"].setdefault("internal_domains", ["folloze.com"])
     config["matching"].setdefault("ignored_domains", [])
     config["matching"].setdefault("ignored_company_keywords", [])
-    owner_scope = owner_scope_from_config(config)
-    config["rep"]["owner_emails"] = owner_scope["owner_emails"]
-    config["rep"]["owner_names"] = owner_scope["owner_names"]
-    if not clean_string(config["rep"].get("email")) and owner_scope["owner_emails"]:
-        config["rep"]["email"] = owner_scope["owner_emails"][0]
     return config_path, config
 
 
 def run_sf_json(args: list[str]) -> dict[str, Any]:
     cmd = ["sf", *args, "--json"]
-    env = os.environ.copy()
-    env.setdefault("SF_DISABLE_LOG_FILE", "true")
-    env.setdefault("SFDX_DISABLE_LOG_FILE", "true")
-    env.setdefault("SF_DISABLE_TELEMETRY", "true")
-    env.setdefault("SFDX_DISABLE_TELEMETRY", "true")
-    proc = subprocess.run(cmd, capture_output=True, text=True, env=env)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
         stderr = proc.stderr.strip()
         stdout = proc.stdout.strip()
@@ -395,10 +334,9 @@ def field_metadata_map(opportunity_describe: dict[str, Any]) -> dict[str, dict[s
     return result
 
 
-def build_open_opportunity_records(session: SalesforceSession, owner_scope: dict[str, list[str]]) -> list[dict[str, Any]]:
-    owner_filter = owner_scope_filters(owner_scope, "Owner")
+def build_open_opportunity_records(session: SalesforceSession, owner_email: str) -> list[dict[str, Any]]:
     soql = f"""
-SELECT Id, Name, StageName, LastModifiedDate, CreatedDate, Amount, NextStep, Next_step__c,
+SELECT Id, Name, StageName, LastModifiedDate, CreatedDate, Amount, LeadSource, NextStep, Next_step__c,
        Summary__c, Redflag_s__c, Decision_Criteria__c, Decision_Process__c, Implicate_the_Pain__c,
        Metrics__c, Paper_Process__c, Competition__c, What_s_New_Changed__c, What_s_New_What_s_Changed_Date__c,
        Next_Call_Date__c, AccountId, Account.Name, Account.Website, OwnerId, Owner.Name, Owner.Email,
@@ -409,19 +347,29 @@ SELECT Id, Name, StageName, LastModifiedDate, CreatedDate, Amount, NextStep, Nex
        Procurement_Contact__c, Procurement_Contact__r.Name, Procurement_Contact__r.Email,
        Signer1__c, Signer1__r.Name, Signer1__r.Email
 FROM Opportunity
-WHERE IsClosed = false AND {owner_filter}
+WHERE IsClosed = false AND Owner.Email = '{owner_email}'
 ORDER BY LastModifiedDate DESC
 """.strip()
     return session.query_all(soql)
 
 
-def build_contact_roles(session: SalesforceSession, owner_scope: dict[str, list[str]]) -> list[dict[str, Any]]:
-    owner_filter = owner_scope_filters(owner_scope, "Opportunity.Owner")
+def build_recent_closed_won_records(session: SalesforceSession, owner_email: str) -> list[dict[str, Any]]:
+    soql = f"""
+SELECT Id, Name, AccountId, Account.Name, StageName, LastModifiedDate, CreatedDate
+FROM Opportunity
+WHERE IsWon = true AND AccountId != null AND Owner.Email = '{owner_email}'
+  AND LastModifiedDate = LAST_N_DAYS:30
+ORDER BY LastModifiedDate DESC
+""".strip()
+    return session.query_all(soql)
+
+
+def build_contact_roles(session: SalesforceSession, owner_email: str) -> list[dict[str, Any]]:
     soql = f"""
 SELECT Id, OpportunityId, ContactId, Role, IsPrimary,
        Contact.Name, Contact.Email, Contact.AccountId
 FROM OpportunityContactRole
-WHERE Opportunity.IsClosed = false AND {owner_filter}
+WHERE Opportunity.IsClosed = false AND Opportunity.Owner.Email = '{owner_email}'
 ORDER BY OpportunityId, Contact.Name
 """.strip()
     return session.query_all(soql)
@@ -447,6 +395,7 @@ def decorate_opportunity(record: dict[str, Any], contact_roles: list[dict[str, A
         "last_modified_at": record.get("LastModifiedDate"),
         "created_at": record.get("CreatedDate"),
         "amount": record.get("Amount"),
+        "lead_source": record.get("LeadSource"),
         "next_step": record.get("NextStep"),
         "next_step_c": record.get("Next_step__c"),
         "summary": record.get("Summary__c"),
@@ -483,6 +432,34 @@ def decorate_opportunity(record: dict[str, Any], contact_roles: list[dict[str, A
     }
 
 
+def candidate_suspicion_flags(
+    opp: dict[str, Any], recent_closed_won_by_account: dict[str, list[dict[str, Any]]], cutoff_dt: datetime
+) -> list[str]:
+    flags: list[str] = []
+    created_at = parse_sf_datetime(opp.get("created_at"))
+    account_id = (opp.get("account") or {}).get("id")
+    recent_wins = recent_closed_won_by_account.get(account_id, []) if account_id else []
+    name = clean_string(opp.get("name")) or ""
+    is_recent = bool(created_at and created_at >= cutoff_dt)
+    is_blank = not any(
+        [
+            clean_string(opp.get("summary")),
+            clean_string(opp.get("next_step_c")),
+            clean_string(opp.get("whats_new_changed")),
+            clean_string(opp.get("lead_source")),
+            opp.get("contact_roles"),
+        ]
+    )
+
+    if is_recent and is_blank and recent_wins:
+        flags.append("recent_blank_open_opp_with_same_account_recent_closed_won")
+    if is_recent and is_blank and name.lower().startswith("renewal for "):
+        flags.append("recent_blank_renewal_opp")
+    if is_recent and is_blank and name.lower().startswith("agency (direct)"):
+        flags.append("recent_blank_agency_direct_opp")
+    return flags
+
+
 def build_context(
     session: SalesforceSession,
     config: dict[str, Any],
@@ -493,9 +470,9 @@ def build_context(
     fields = field_metadata_map(describe)
     stage_values = fields["StageName"]["picklist_values"]
     competition_values = fields["Competition__c"]["picklist_values"]
-    owner_scope = owner_scope_from_config(config)
-    open_opps = build_open_opportunity_records(session, owner_scope)
-    role_records = build_contact_roles(session, owner_scope)
+    open_opps = build_open_opportunity_records(session, config["rep"]["email"])
+    recent_closed_won = build_recent_closed_won_records(session, config["rep"]["email"])
+    role_records = build_contact_roles(session, config["rep"]["email"])
     role_map: dict[str, list[dict[str, Any]]] = {}
     for role in role_records:
         role_map.setdefault(role["OpportunityId"], []).append(
@@ -510,8 +487,29 @@ def build_context(
             }
         )
 
-    all_open_decorated = [decorate_opportunity(record, role_map.get(record["Id"], [])) for record in open_opps]
     cutoff_dt = utc_now() - timedelta(hours=lookback_hours)
+    recent_closed_won_by_account: dict[str, list[dict[str, Any]]] = {}
+    for opp in recent_closed_won:
+        account_id = opp.get("AccountId")
+        if not account_id:
+            continue
+        recent_closed_won_by_account.setdefault(account_id, []).append(
+            {
+                "id": opp["Id"],
+                "name": opp.get("Name"),
+                "stage_name": opp.get("StageName"),
+                "created_at": opp.get("CreatedDate"),
+                "last_modified_at": opp.get("LastModifiedDate"),
+            }
+        )
+
+    all_open_decorated = []
+    for record in open_opps:
+        opp = decorate_opportunity(record, role_map.get(record["Id"], []))
+        opp["suspicion_flags"] = candidate_suspicion_flags(opp, recent_closed_won_by_account, cutoff_dt)
+        opp["recent_closed_won_same_account"] = recent_closed_won_by_account.get((opp.get("account") or {}).get("id"), [])
+        all_open_decorated.append(opp)
+
     cutoff_date = cutoff_dt.date()
     if all_open:
         candidates = list(all_open_decorated)
@@ -520,6 +518,8 @@ def build_context(
         for opp in all_open_decorated:
             modified_at = parse_sf_datetime(opp["last_modified_at"])
             next_call_date = parse_sf_date(opp["next_call_date"])
+            if opp.get("suspicion_flags"):
+                continue
             if modified_at and modified_at >= cutoff_dt:
                 candidates.append(opp)
                 continue
@@ -531,7 +531,6 @@ def build_context(
         "lookback_hours": lookback_hours,
         "all_open_mode": all_open,
         "rep_email": config["rep"]["email"],
-        "owner_scope": owner_scope,
         "org_alias": config["salesforce"]["org_alias"],
         "stage_values": stage_values,
         "competition_values": competition_values,
@@ -806,14 +805,12 @@ WHERE OpportunityId IN ({quoted})
 def cmd_check_deps(args: argparse.Namespace) -> int:
     config_path, config = load_config()
     session = SalesforceSession.from_alias(config["salesforce"]["org_alias"])
-    owner_scope = owner_scope_from_config(config)
     payload = {
         "ok": True,
         "config_path": str(config_path),
         "org_alias": config["salesforce"]["org_alias"],
         "org_id": session.org_id,
         "rep_email": config["rep"]["email"],
-        "owner_scope": owner_scope,
         "failure_alert_to": config["notifications"]["failure_alert_to"],
         "connectors_required": ["gmail", "google_calendar", "granola"],
     }

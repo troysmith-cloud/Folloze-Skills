@@ -1,11 +1,16 @@
 #!/bin/zsh
 set -euo pipefail
 
-export HOME="/Users/troysmith"
-export PATH="/Users/troysmith/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+if [[ -z "${HOME:-}" ]]; then
+  echo "HOME is not set." >&2
+  exit 1
+fi
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-workspace="/Users/troysmith/Documents/Playground"
-skill_path="/Users/troysmith/.codex/skills/daily-email-summary-delivery/SKILL.md"
+workspace="${WORKSPACE:-$PWD}"
+codex_home="${CODEX_HOME:-$HOME/.codex}"
+skill_path="$codex_home/skills/daily-email-summary-delivery/SKILL.md"
+codex_bin="${CODEX_BIN:-codex}"
 status_dir="/tmp/daily-email-summary-manual"
 mkdir -p "$status_dir"
 
@@ -44,7 +49,7 @@ EOF
 
 {
   echo "[$(date -Iseconds)] starting daily email summary run type=${run_type}"
-  /private/var/folders/hs/c5_f9qz55tvbj_lfdj8pc__40000gn/T/AppTranslocation/C6360DDA-9B45-403E-B9EA-FCF948D61E42/d/Codex.app/Contents/Resources/codex exec \
+  "$codex_bin" exec \
   --skip-git-repo-check \
   --dangerously-bypass-approvals-and-sandbox \
   --cd "$workspace" \

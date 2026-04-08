@@ -69,6 +69,7 @@ It is created automatically by `init-run`.
 ## Validation rules
 
 - `StageName` must be forward-only and must stay within the active pipeline supported by the helper.
+- `Summary__c` may be written either through `merge_fields` for prepend/append behavior or through `set_fields` when you need to replace an inaccurate existing summary block instead of duplicating it.
 - Standard `NextStep` writes are disabled. If a plan still includes `NextStep`, the helper will ignore it and remap the value to `Next_step__c` when possible.
 - `Next_Call_Date__c` must be supplied as an ISO date string like `2026-03-30`.
 - `Competition__c` must match an actual Salesforce picklist value; otherwise use `Other`.

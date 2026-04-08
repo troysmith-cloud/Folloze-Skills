@@ -28,7 +28,7 @@ Example:
 
 ```bash
 mkdir -p ~/.codex/skills
-git clone https://github.com/0xTrey/salesforce-update-skill.git ~/.codex/skills/Salesforce-Update
+git clone https://github.com/troysmith-cloud/Folloze-Skills.git ~/Projects/Folloze-Skills
 ```
 
 ## Configure

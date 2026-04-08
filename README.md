@@ -39,7 +39,7 @@ This repository includes both:
 ## Initial Rollout
 
 ```bash
-git clone git@github.com:0xTrey/Folloze-Skills.git ~/Projects/Folloze-Skills
+git clone git@github.com:troysmith-cloud/Folloze-Skills.git ~/Projects/Folloze-Skills
 cd ~/Projects/Folloze-Skills
 python3 scripts/sync_codex_skills.py --overwrite
 ```
