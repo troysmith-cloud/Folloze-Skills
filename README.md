@@ -1,13 +1,78 @@
 # Folloze Skills
 
-Public home for reusable Folloze-oriented Codex skills.
+Central source of truth for Folloze Codex skills.
+
+This repo is meant to be the team-managed distribution point. Skills live here, updates are reviewed here, and each teammate syncs this repo into `~/.codex/skills` from one local clone.
+
+## Recommended Team Setup
+
+Use this repo as the only place where skill code and instructions are edited. Do not hand-edit skills separately in each person's `~/.codex/skills` directory.
+
+The recommended rollout model is:
+
+1. Each teammate clones this repo to a stable local path such as `~/Projects/Folloze-Skills`
+2. They run `python3 scripts/sync_codex_skills.py --overwrite`
+3. The sync script links or copies each repo skill into `~/.codex/skills`
+4. An optional macOS `launchd` job runs `git pull --ff-only` plus the same sync command on a schedule
+5. Teammates restart Codex after skill updates so the app reloads the changed skill files
+
+This is the practical replacement for Codex's built-in GitHub installer, which is install-oriented and not a live team update channel.
+
+## What "Automatic Update" Means Here
+
+GitHub push alone will not update a teammate's installed skills.
+
+To make updates propagate automatically, you need two layers:
+
+- This repo as the source of truth
+- A local sync mechanism on each machine that pulls the repo and refreshes `~/.codex/skills`
+
+The repo now includes both:
+
+- `skills-manifest.json`
+- `scripts/sync_codex_skills.py`
+- `scripts/validate_skills.py`
+- `ops/launchd/com.folloze.codex-skills-sync.plist.template`
+
+## Initial Rollout
+
+From a teammate machine:
+
+```bash
+git clone git@github.com:0xTrey/Folloze-Skills.git ~/Projects/Folloze-Skills
+cd ~/Projects/Folloze-Skills
+python3 scripts/sync_codex_skills.py --overwrite
+```
+
+For ongoing automatic sync on macOS:
+
+1. Copy the launchd template in `ops/launchd/`
+2. Replace `__REPO_ROOT__` with that teammate's local clone path
+3. Load it with `launchctl`
+
+The scheduled command will:
+
+- `git pull --ff-only`
+- refresh the linked skills under `~/.codex/skills`
+
+## Governance
+
+Use normal software delivery rules here:
+
+- Protect `main`
+- Require PR review for skill changes
+- Run validation on every PR
+- Avoid machine-specific absolute paths in skills
+- Keep secrets and personal tokens out of the repo
+
+If these skills include internal sales process, GTM workflow, or customer-specific implementation details, this repo should be private before full team rollout.
 
 ## Structure
 
 - `Skills/`
-  - `account-org-chart/`
-  - `folloze-sales-doc/`
-  - `Salesforce-Update/`
+- `scripts/`
+- `ops/`
+- `.github/workflows/`
 
 Each skill lives in its own subdirectory so it can carry its own `SKILL.md`, scripts, references, and agent config.
 
@@ -28,4 +93,5 @@ Manually reconciles Salesforce open opportunities from Gmail, Google Calendar, a
 - Keep the runnable instructions in `SKILL.md`
 - Put helper scripts in `scripts/` when the skill needs automation
 - Put reference docs and examples in `references/`
+- Keep skills machine-independent and avoid user-specific absolute paths
 - Avoid generated artifacts and local caches in git

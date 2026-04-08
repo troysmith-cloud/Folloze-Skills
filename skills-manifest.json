@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "channel": "stable",
+  "skills": [
+    {
+      "name": "account-org-chart",
+      "path": "Skills/account-org-chart",
+      "enabled": true,
+      "requires_restart": true
+    },
+    {
+      "name": "folloze-sales-doc",
+      "path": "Skills/folloze-sales-doc",
+      "enabled": true,
+      "requires_restart": true
+    },
+    {
+      "name": "Salesforce-Update",
+      "path": "Skills/Salesforce-Update",
+      "enabled": true,
+      "requires_restart": true
+    }
+  ]
+}

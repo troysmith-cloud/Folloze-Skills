@@ -372,10 +372,10 @@ Save the updated workbook under a repo-backed path such as `outputs/account-org-
 
 The final deliverable is **not** the local `.xlsx`. The final deliverable is a **native Google Sheet** in the correct company folder in Google Drive.
 
-Use the helper script in this skill directory:
+Use the helper script shipped with this skill. On most machines the installed path is `${CODEX_HOME:-$HOME/.codex}/skills/account-org-chart/upload_org_chart.py`.
 
 ```bash
-python3 /Users/treyharnden/skills/account-org-chart/upload_org_chart.py \
+python3 "${CODEX_HOME:-$HOME/.codex}/skills/account-org-chart/upload_org_chart.py" \
   --company "[Company]" \
   --xlsx "/absolute/path/to/outputs/account-org-chart/[company]_org_chart.xlsx" \
   --open

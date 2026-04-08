@@ -6,7 +6,7 @@ description: Manually reconcile Salesforce open opportunities from Gmail, Google
 # Salesforce Update
 
 This skill is manual-only.
-Use Gmail, Google Calendar, and Granola connectors for read-side evidence and the local helper at `/Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py` for Salesforce candidate export, plan validation, and writes.
+Use Gmail, Google Calendar, and Granola connectors for read-side evidence and the local helper at `${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py` for Salesforce candidate export, plan validation, and writes.
 
 Do not silently create new opportunities.
 If unmatched activity looks like a new deal, present it as a create candidate and ask the rep before any new opportunity is created.
@@ -14,9 +14,9 @@ If unmatched activity looks like a new deal, present it as a create candidate an
 ## Prerequisites
 
 1. Confirm local config and Salesforce auth
-- Run: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py check-deps --json`
+- Run: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" check-deps --json`
 - Config path defaults to `~/.config/salesforce-update/config.json`
-- Read `/Users/treyharnden/.codex/skills/Salesforce-Update/references/config.md` before creating or editing config.
+- Read `${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/references/config.md` before creating or editing config.
 
 2. Confirm connectors are available for this session
 - Gmail connector
@@ -26,9 +26,9 @@ If unmatched activity looks like a new deal, present it as a create candidate an
 ## Workflow
 
 1. Initialize a run
-- Default 72h run: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py init-run --json`
-- Last week: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py init-run --lookback-hours 168 --json`
-- All open: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py init-run --all-open --json`
+- Default 72h run: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" init-run --json`
+- Last week: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" init-run --lookback-hours 168 --json`
+- All open: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" init-run --all-open --json`
 
 2. Read the generated run files
 - `context.json` contains:
@@ -151,12 +151,12 @@ If unmatched activity looks like a new deal, present it as a create candidate an
 - Present create candidates to the rep and ask whether a new opportunity should be created.
 
 9. Validate the plan before writing
-- Read `/Users/treyharnden/.codex/skills/Salesforce-Update/references/plan-schema.md`
+- Read `${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/references/plan-schema.md`
 - Fill `plan.json`
-- Validate: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py validate-plan --run-dir <run_dir> --json`
+- Validate: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" validate-plan --run-dir <run_dir> --json`
 
 10. Apply the plan
-- Apply: `python3 /Users/treyharnden/.codex/skills/Salesforce-Update/scripts/salesforce_update.py apply-plan --run-dir <run_dir> --json`
+- Apply: `python3 "${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/scripts/salesforce_update.py" apply-plan --run-dir <run_dir> --json`
 - The helper writes local logs into the run directory and returns a concise summary payload.
 
 11. On failure

@@ -1,6 +1,6 @@
 Use the config file at `~/.config/salesforce-update/config.json` unless `SALESFORCE_UPDATE_CONFIG` points elsewhere.
 
-Copy the example from `/Users/treyharnden/.codex/skills/Salesforce-Update/references/config.example.json`.
+Copy the example from `${CODEX_HOME:-$HOME/.codex}/skills/Salesforce-Update/references/config.example.json`.
 
 ## Required fields
 
