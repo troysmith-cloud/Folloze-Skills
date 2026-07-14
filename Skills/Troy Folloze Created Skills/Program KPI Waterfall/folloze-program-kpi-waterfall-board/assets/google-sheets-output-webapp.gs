@@ -44,7 +44,7 @@ function populateCustomerProgramForm_(spreadsheet, payload) {
 
   ensureSheetSize_(sheet, Math.max(rows.length + 3, 4), width);
   sheet.getRange(1, 1).setValue(`${payload.customerName || 'Customer'} Program Waterfall Form`);
-  sheet.getRange(2, 1).setValue('Created from the Folloze Joint Deployment Program Template Board.');
+  sheet.getRange(2, 1).setValue('Created from the Folloze Deployment Planning & Program Workspace.');
   sheet.getRange(3, 1, maxRows + 1, width).clearContent();
   if (headers.length) sheet.getRange(3, 1, 1, width).setValues([padRow_(headers, width)]);
   if (rows.length) sheet.getRange(4, 1, rows.length, width).setValues(rows.map(row => padRow_(row, width)));
