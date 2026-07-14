@@ -49,7 +49,7 @@ Build a Folloze MCP board that gives customers the same capabilities as the prog
 
 ## Durable Vercel Boards
 
-Use `/Users/troysmith/Documents/Troy Folloze Customer Success vercel-projects/apps/jdp-board-portal` when the board needs user login and durable state.
+Use the shared `troy-folloze-customer-success-vercel-projects/apps/jdp-board-portal` app workspace when the board needs user login and durable state.
 
 The Vercel app provides:
 
