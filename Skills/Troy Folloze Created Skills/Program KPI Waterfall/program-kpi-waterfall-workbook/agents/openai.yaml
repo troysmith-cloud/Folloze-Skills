@@ -1,0 +1,5 @@
+interface:
+  display_name: "Program KPI Workbook"
+  short_description: "Build KPI waterfall workbooks."
+  default_prompt: "Use $program-kpi-waterfall-workbook to build a program KPI waterfall workbook."
+

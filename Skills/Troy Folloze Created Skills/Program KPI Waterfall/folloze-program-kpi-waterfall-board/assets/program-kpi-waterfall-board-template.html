@@ -1,0 +1,2827 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Folloze Joint Deployment Program Template Board</title>
+  <link rel="stylesheet" href="THEME_URL_PLACEHOLDER">
+</head>
+<body>
+<style>
+  :root {
+    --flz-blue: #0077ff;
+    --flz-sky: #00ccff;
+    --flz-navy: #071428;
+    --flz-slate: #2c3d59;
+    --flz-ink: #142033;
+    --flz-muted: #5f7088;
+    --flz-soft: #f3f9fd;
+    --flz-line: #d8ecfa;
+    --flz-green: #11d175;
+    --flz-pink: #ff469e;
+    --flz-yellow: #ffc800;
+    --flz-white: #ffffff;
+    --radius: 8px;
+    --shadow: 0 18px 50px rgba(7, 20, 40, .12);
+    --rail: min(1536px, calc(100vw - 40px));
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; overflow-x: hidden; }
+  body {
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    color: var(--flz-ink);
+    background: #fff;
+    line-height: 1.45;
+  }
+
+  button, input, select, textarea { font: inherit; }
+  button { cursor: pointer; }
+  a { color: inherit; }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 12px;
+    background: var(--flz-navy);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    z-index: 100;
+  }
+  .skip-link:focus { left: 12px; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(255, 255, 255, .94);
+    border-bottom: 1px solid rgba(216, 236, 250, .8);
+    backdrop-filter: blur(14px);
+  }
+  .nav {
+    width: var(--rail);
+    margin: 0 auto;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .brand svg { width: 99px; height: 24px; flex: 0 0 auto; }
+  .customer-placeholder {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    color: var(--flz-muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .customer-logo-placeholder {
+    width: 22px;
+    height: 22px;
+    border: 1px dashed rgba(44, 61, 89, .38);
+    border-radius: 6px;
+    background: rgba(216, 236, 250, .36);
+    flex: 0 0 auto;
+  }
+  .customer-placeholder strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font: inherit;
+  }
+  .brand span {
+    border-left: 1px solid var(--flz-line);
+    padding-left: 14px;
+    color: var(--flz-slate);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .navlinks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .csm-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    border: 1px solid var(--flz-line);
+    background: var(--flz-soft);
+    border-radius: 8px;
+    padding: 7px 10px 8px;
+  }
+  .csm-picker label {
+    color: var(--flz-slate);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .csm-picker select {
+    width: 100%;
+    min-height: 32px;
+    border: 0;
+    background: transparent;
+    padding: 2px 22px 2px 0;
+    color: var(--flz-navy);
+    font-weight: 800;
+  }
+  .navlinks a, .utility-btn {
+    border: 0;
+    background: transparent;
+    color: var(--flz-slate);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 999px;
+  }
+  .navlinks a:hover, .utility-btn:hover { background: var(--flz-soft); color: var(--flz-blue); }
+  .primary-btn, .secondary-btn, .ghost-btn {
+    border-radius: 999px;
+    min-height: 44px;
+    padding: 11px 18px;
+    border: 1px solid transparent;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+  }
+  .primary-btn {
+    color: white;
+    background: linear-gradient(120deg, var(--flz-blue), #0048de);
+    box-shadow: 0 12px 28px rgba(0, 119, 255, .24);
+  }
+  .secondary-btn {
+    color: var(--flz-blue);
+    background: white;
+    border-color: var(--flz-line);
+  }
+  .ghost-btn {
+    color: var(--flz-slate);
+    background: var(--flz-soft);
+    border-color: var(--flz-line);
+  }
+  .primary-btn:hover, .secondary-btn:hover, .ghost-btn:hover { transform: translateY(-1px); }
+
+  .hero {
+    background:
+      radial-gradient(circle at 10% 0%, rgba(0, 204, 255, .22), transparent 32%),
+      radial-gradient(circle at 90% 5%, rgba(255, 70, 158, .14), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f3f9fd 100%);
+    border-bottom: 1px solid var(--flz-line);
+  }
+  .hero-inner {
+    width: var(--rail);
+    margin: 0 auto;
+    padding: 54px 0 38px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
+    gap: 36px;
+    align-items: center;
+  }
+  .eyebrow {
+    color: var(--flz-blue);
+    text-transform: uppercase;
+    letter-spacing: .11em;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  h1 {
+    margin: 10px 0 16px;
+    font-size: clamp(28px, 3vw, 46px);
+    line-height: .94;
+    letter-spacing: 0;
+    color: var(--flz-navy);
+    max-width: 900px;
+  }
+  .hero p {
+    color: var(--flz-slate);
+    font-size: clamp(17px, 1.4vw, 22px);
+    margin: 0 0 24px;
+    max-width: 780px;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .section-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .hero-panel {
+    background: rgba(255, 255, 255, .86);
+    border: 1px solid rgba(216, 236, 250, .95);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+  .panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .panel-title strong { color: var(--flz-navy); font-size: 18px; }
+  .benchmark-note {
+    color: var(--flz-muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.25;
+    max-width: 190px;
+    text-align: right;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--flz-line);
+    background: var(--flz-soft);
+    color: var(--flz-slate);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .mini-waterfall {
+    display: grid;
+    gap: 10px;
+  }
+  .mini-step {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 78px;
+    gap: 10px;
+    align-items: center;
+    color: var(--flz-slate);
+    font-size: 13px;
+  }
+  .bar {
+    height: 10px;
+    background: #e8f4fb;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar span {
+    display: block;
+    height: 100%;
+    min-width: 5px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--flz-sky), var(--flz-blue));
+  }
+  .mini-step strong {
+    color: var(--flz-navy);
+    text-align: right;
+  }
+
+  section { scroll-margin-top: 92px; }
+  .section {
+    width: var(--rail);
+    margin: 0 auto;
+    padding: 54px 0;
+  }
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+  .section-head h2 {
+    margin: 6px 0 0;
+    color: var(--flz-navy);
+    font-size: clamp(28px, 3vw, 46px);
+    line-height: 1.02;
+  }
+  .section-head p {
+    color: var(--flz-muted);
+    margin: 10px 0 0;
+    max-width: 720px;
+  }
+
+  .totals {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: white;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .stat span {
+    color: var(--flz-muted);
+    font-weight: 800;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .stat strong {
+    display: block;
+    color: var(--flz-navy);
+    font-size: clamp(19px, 2vw, 30px);
+    line-height: 1.05;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat em {
+    display: block;
+    color: var(--flz-muted);
+    font-style: normal;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  .builder-shell {
+    display: grid;
+    grid-template-columns: minmax(330px, 410px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+    scroll-margin-top: 96px;
+  }
+  .program-list, .program-editor, .summary-card {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: white;
+  }
+  .program-list {
+    padding: 14px;
+    position: sticky;
+    top: 92px;
+  }
+  .program-list-label {
+    margin: 0 0 10px;
+    color: var(--flz-blue);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .list-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .list-actions button { flex: 1; }
+  .program-tabs {
+    display: grid;
+    gap: 10px;
+    max-height: 548px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+  .program-tab-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .program-tab-row.dragging {
+    opacity: .54;
+  }
+  .program-tab-row.drag-over {
+    outline: 2px solid var(--flz-blue);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+  .drag-handle {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: white;
+    color: var(--flz-slate);
+    cursor: grab;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 0 9px;
+    line-height: 1;
+  }
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+  .program-tab {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--flz-line);
+    background: var(--flz-soft);
+    border-radius: var(--radius);
+    padding: 12px;
+    color: var(--flz-slate);
+    transition: border-color .18s ease, background-color .18s ease, transform .18s ease;
+  }
+  .program-tab:hover { transform: translateY(-1px); }
+  .program-tab[aria-selected="true"] {
+    background: var(--flz-navy);
+    border-color: var(--flz-navy);
+    color: white;
+  }
+  .program-tab strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 3px;
+  }
+  .program-tab small { font-weight: 700; opacity: .78; }
+  .delete-tab-btn {
+    border: 1px solid #f3c6d8;
+    background: #fff7fb;
+    color: #b3195b;
+    border-radius: var(--radius);
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .program-tab[aria-selected="true"] + .delete-tab-btn {
+    border-color: rgba(255,255,255,.24);
+    background: var(--flz-navy);
+    color: white;
+  }
+
+  .program-editor { padding: 18px; }
+  .lock-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: var(--flz-soft);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+  .lock-toggle span {
+    display: block;
+    color: var(--flz-navy);
+    font-weight: 900;
+  }
+  .lock-toggle small {
+    color: var(--flz-muted);
+    font-weight: 700;
+  }
+  .lock-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--flz-slate);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .lock-switch input {
+    width: 44px;
+    min-height: 24px;
+    accent-color: var(--flz-blue);
+  }
+  input:disabled, select:disabled, textarea:disabled, button:disabled {
+    cursor: not-allowed;
+    opacity: .62;
+  }
+  .editor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .field, .wide-field {
+    display: grid;
+    gap: 6px;
+  }
+  .wide-field { grid-column: 1 / -1; }
+  .planner-settings {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: -6px 0 18px;
+    padding: 14px;
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: var(--flz-soft);
+  }
+  .channel-picker {
+    border: 1px solid #cce1f2;
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .channel-picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--flz-navy);
+    font-weight: 900;
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+  .channel-picker-head span {
+    overflow-wrap: anywhere;
+  }
+  .channel-edit-btn, .channel-submit-btn {
+    border: 1px solid #b8d7ee;
+    background: #f4fbff;
+    color: var(--flz-blue);
+    border-radius: 999px;
+    min-height: 30px;
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .channel-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 10px;
+    max-height: 128px;
+    overflow: auto;
+    padding: 0 10px 10px;
+  }
+  .channel-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--flz-slate);
+    font-size: 12px;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+  }
+  .channel-options input {
+    width: auto;
+    min-height: auto;
+    accent-color: var(--flz-blue);
+  }
+  .channel-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 10px 10px;
+  }
+  .channel-submit-btn {
+    background: var(--flz-blue);
+    border-color: var(--flz-blue);
+    color: white;
+  }
+  .actuals-panel {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--flz-line);
+  }
+  .actuals-panel h3 {
+    margin: 0 0 6px;
+    color: var(--flz-navy);
+    font-size: 20px;
+  }
+  .actuals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .tracking-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .tracking-strip span {
+    border: 1px solid var(--flz-line);
+    border-radius: 6px;
+    background: #fff;
+    padding: 10px;
+  }
+  .tracking-strip em {
+    display: block;
+    color: var(--flz-muted);
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .tracking-strip strong {
+    display: block;
+    color: var(--flz-navy);
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  label {
+    color: var(--flz-slate);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  input, select, textarea {
+    width: 100%;
+    border: 1px solid #cce1f2;
+    border-radius: 6px;
+    padding: 11px 12px;
+    color: var(--flz-ink);
+    background: #fff;
+    min-height: 44px;
+  }
+  textarea { min-height: 88px; resize: vertical; }
+  input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
+    outline: 3px solid rgba(0, 204, 255, .42);
+    outline-offset: 2px;
+  }
+  .benchmarks {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--flz-line);
+  }
+  .benchmark-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .benchmark-head h3 { margin: 0; color: var(--flz-navy); font-size: 20px; }
+  .benchmark-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .benchmark-grid .field input { text-align: right; }
+  .hint {
+    color: var(--flz-muted);
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  .waterfall-preview {
+    margin-top: 20px;
+    background: var(--flz-soft);
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .waterfall-row {
+    display: grid;
+    grid-template-columns: 156px minmax(70px, 1fr) minmax(108px, max-content);
+    gap: 10px;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(216, 236, 250, .75);
+  }
+  .waterfall-row:last-child { border-bottom: 0; }
+  .waterfall-row span { color: var(--flz-slate); font-weight: 700; }
+  .waterfall-row strong { color: var(--flz-navy); text-align: right; font-size: 16px; }
+  .waterfall-row .bar { height: 10px; background: white; }
+
+  .quarter-rollup {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .quarter-card {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    padding: 14px;
+    background: linear-gradient(180deg, #fff, var(--flz-soft));
+    min-width: 0;
+    overflow: hidden;
+  }
+  .quarter-card h3 {
+    margin: 0 0 8px;
+    color: var(--flz-navy);
+    font-size: 18px;
+  }
+  .quarter-card p {
+    margin: 0;
+    color: var(--flz-muted);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .quarter-card strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--flz-blue);
+    font-size: clamp(16px, 1.45vw, 22px);
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .quarter-metrics {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .quarter-metrics div {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--flz-slate);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .quarter-metrics b {
+    color: var(--flz-navy);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .summary-band {
+    background: var(--flz-navy);
+    color: white;
+  }
+  .summary-band .section-head h2,
+  .summary-band .section-head p,
+  .summary-band .eyebrow { color: white; }
+  .summary-band .section-head p { opacity: .76; }
+  .section.summary-section { padding: 54px 0; }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .summary-card {
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(216, 236, 250, .18);
+    color: white;
+    padding: 18px;
+  }
+  .summary-card h3 { margin: 0 0 12px; font-size: 21px; }
+  .summary-card dl {
+    display: grid;
+    gap: 9px;
+    margin: 0;
+  }
+  .summary-card div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid rgba(255,255,255,.12);
+    padding-top: 9px;
+  }
+  .summary-card dt { color: rgba(255,255,255,.72); }
+  .summary-card dd { margin: 0; font-weight: 900; text-align: right; }
+  .summary-card dd,
+  .program-section td:nth-child(2),
+  .program-section td:nth-child(3),
+  .waterfall-row strong {
+    min-width: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-card dd {
+    font-size: clamp(13px, 1vw, 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cumulative-table {
+    margin-top: 16px;
+    border: 1px solid rgba(216, 236, 250, .18);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    background: rgba(255,255,255,.04);
+  }
+  .cumulative-table table {
+    width: 100%;
+    min-width: 1180px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .cumulative-table th,
+  .cumulative-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .cumulative-table th:first-child,
+  .cumulative-table td:first-child { text-align: left; }
+  .cumulative-table th {
+    color: rgba(255,255,255,.72);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .cumulative-table td {
+    color: white;
+    font-weight: 800;
+  }
+  .cumulative-table tr.ytd-row td {
+    background: rgba(0, 119, 255, .18);
+    color: #ffffff;
+  }
+  .cumulative-table tr.total-row td {
+    background: rgba(255,255,255,.1);
+    color: #ffffff;
+  }
+
+  .waterfall-visual-section {
+    background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+  }
+  .visual-card {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: white;
+    box-shadow: var(--shadow);
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 12px;
+  }
+  .visual-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--flz-line);
+    border-radius: calc(var(--radius) - 4px);
+    background: #f8fbfe;
+  }
+  .visual-caption {
+    margin: 12px 0 0;
+    color: var(--flz-slate);
+    font-size: 14px;
+  }
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .program-section {
+    border: 1px solid var(--flz-line);
+    border-radius: var(--radius);
+    background: white;
+    overflow: hidden;
+  }
+  .program-section header {
+    background: linear-gradient(120deg, var(--flz-soft), #fff);
+    border-bottom: 1px solid var(--flz-line);
+    padding: 16px;
+  }
+  .program-section h3 {
+    margin: 6px 0 0;
+    color: var(--flz-navy);
+    font-size: 24px;
+  }
+  .program-section .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .program-section table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .program-section th,
+  .program-section td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--flz-line);
+    text-align: left;
+    vertical-align: middle;
+  }
+  .program-section th {
+    background: #fbfdff;
+    color: var(--flz-slate);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .program-section td:nth-child(2),
+  .program-section td:nth-child(3) {
+    text-align: right;
+    font-weight: 800;
+    color: var(--flz-navy);
+    font-size: clamp(12px, .95vw, 14px);
+  }
+  .program-section th:nth-child(1),
+  .program-section td:nth-child(1) { width: 38%; }
+  .program-section th:nth-child(2),
+  .program-section td:nth-child(2) { width: 24%; }
+  .program-section th:nth-child(3),
+  .program-section td:nth-child(3) { width: 38%; }
+  .program-value-strip {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .program-value-strip span {
+    min-width: 0;
+    border: 1px solid var(--flz-line);
+    border-radius: 8px;
+    background: white;
+    padding: 8px 10px;
+  }
+  .program-value-strip em {
+    display: block;
+    color: var(--flz-muted);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .program-value-strip strong {
+    display: block;
+    color: var(--flz-navy);
+    font-size: clamp(13px, 1vw, 15px);
+    line-height: 1.15;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .note-row {
+    padding: 14px;
+    color: var(--flz-muted);
+    font-size: 14px;
+  }
+
+  .empty {
+    border: 1px dashed #b8d7ec;
+    border-radius: var(--radius);
+    background: var(--flz-soft);
+    padding: 28px;
+    color: var(--flz-slate);
+    text-align: center;
+  }
+  .quarter-section {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .quarter-section > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--flz-line);
+    padding-bottom: 10px;
+  }
+  .quarter-section h3 {
+    margin: 0;
+    color: var(--flz-navy);
+    font-size: 26px;
+  }
+  .quarter-section p {
+    margin: 0;
+    color: var(--flz-muted);
+    font-weight: 800;
+  }
+  .footer {
+    border-top: 1px solid var(--flz-line);
+    background: white;
+  }
+  .footer-inner {
+    width: var(--rail);
+    margin: 0 auto;
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--flz-muted);
+    font-size: 14px;
+  }
+
+  @media (max-width: 1080px) {
+    .hero-inner, .builder-shell { grid-template-columns: 1fr; }
+    .program-list { position: static; }
+    .summary-grid, .sections-grid, .quarter-rollup, .planner-settings { grid-template-columns: 1fr; }
+    .totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .actuals-grid, .tracking-strip, .program-value-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 740px) {
+    :root { --rail: min(100vw - 28px, 1536px); }
+    .nav { min-height: 64px; }
+    .brand span, .customer-placeholder, .navlinks a { display: none; }
+    .csm-picker {
+      order: 3;
+      width: 100%;
+    }
+    .csm-picker select { min-width: 0; }
+    .hero-inner { padding: 36px 0 28px; }
+    .hero-actions, .list-actions { flex-direction: column; }
+    .primary-btn, .secondary-btn, .ghost-btn { width: 100%; }
+    .totals, .editor-grid, .benchmark-grid, .actuals-grid, .tracking-strip, .channel-options { grid-template-columns: 1fr; }
+    .program-value-strip { grid-template-columns: 1fr; }
+    .waterfall-row, .mini-step {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .waterfall-row strong, .mini-step strong { text-align: left; }
+    .section-head, .footer-inner { display: block; }
+    .section { padding: 40px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+  @media print {
+    @page { margin: .45in; size: letter; }
+    html, body {
+      background: #ffffff !important;
+      color: #071428 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .topbar, .hero-actions, .section-actions, .list-actions, .delete-tab-btn, .drag-handle {
+      display: none !important;
+    }
+    .hero, .summary-band, .section, .footer {
+      background: #ffffff !important;
+    }
+    .hero-inner, .builder-shell {
+      display: block !important;
+      padding: 0 !important;
+    }
+    .section, .summary-section, .waterfall-visual-section {
+      padding: 24px 0 !important;
+      break-inside: avoid;
+    }
+    .hero-panel, .program-editor, .program-list, .stat, .summary-card, .visual-card, .quarter-section {
+      box-shadow: none !important;
+      break-inside: avoid;
+    }
+    .program-list {
+      position: static !important;
+      margin-bottom: 16px;
+    }
+    .program-tabs {
+      max-height: none !important;
+    }
+    .footer-inner {
+      width: 100% !important;
+    }
+  }
+  body.pdf-exporting {
+    background: #ffffff !important;
+  }
+  body.pdf-exporting,
+  body.pdf-exporting * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.pdf-exporting {
+    font-size: 11px !important;
+  }
+  body.pdf-exporting #main,
+  body.pdf-exporting .footer-inner {
+    width: 7.25in !important;
+    max-width: 7.25in !important;
+    margin: 0 auto !important;
+  }
+  body.pdf-exporting .topbar,
+  body.pdf-exporting .hero-actions,
+  body.pdf-exporting .section-actions,
+  body.pdf-exporting .list-actions,
+  body.pdf-exporting .delete-tab-btn,
+  body.pdf-exporting .drag-handle {
+    display: none !important;
+  }
+  body.pdf-exporting .program-list {
+    position: static !important;
+  }
+  body.pdf-exporting .hero {
+    min-height: 0 !important;
+  }
+  body.pdf-exporting .hero-inner,
+  body.pdf-exporting .builder-shell {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 12px 0 !important;
+  }
+  body.pdf-exporting .hero h1 {
+    max-width: none !important;
+    font-size: 26px !important;
+    line-height: 1.05 !important;
+    margin: 4px 0 8px !important;
+  }
+  body.pdf-exporting .hero p,
+  body.pdf-exporting .section-head p,
+  body.pdf-exporting .quarter-section p,
+  body.pdf-exporting .program-section .meta {
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+  body.pdf-exporting .hero-panel,
+  body.pdf-exporting .program-list,
+  body.pdf-exporting .program-editor,
+  body.pdf-exporting .summary-card,
+  body.pdf-exporting .visual-card,
+  body.pdf-exporting .quarter-section,
+  body.pdf-exporting .program-section,
+  body.pdf-exporting .stat {
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  body.pdf-exporting .hero-panel,
+  body.pdf-exporting .program-editor,
+  body.pdf-exporting .summary-card,
+  body.pdf-exporting .visual-card,
+  body.pdf-exporting .quarter-section,
+  body.pdf-exporting .program-section {
+    padding: 10px !important;
+  }
+  body.pdf-exporting .section,
+  body.pdf-exporting .section.summary-section,
+  body.pdf-exporting .waterfall-visual-section {
+    padding: 12px 0 !important;
+    break-inside: auto !important;
+  }
+  body.pdf-exporting .section-head {
+    margin-bottom: 10px !important;
+    gap: 8px !important;
+  }
+  body.pdf-exporting .section-head h2 {
+    font-size: 18px !important;
+    line-height: 1.1 !important;
+  }
+  body.pdf-exporting .totals,
+  body.pdf-exporting .quarter-rollup,
+  body.pdf-exporting .summary-grid,
+  body.pdf-exporting .sections-grid,
+  body.pdf-exporting .tracking-strip,
+  body.pdf-exporting .program-value-strip,
+  body.pdf-exporting .actuals-grid {
+    gap: 8px !important;
+  }
+  body.pdf-exporting .totals {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+  body.pdf-exporting .quarter-rollup,
+  body.pdf-exporting .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  body.pdf-exporting .sections-grid,
+  body.pdf-exporting .program-value-strip,
+  body.pdf-exporting .actuals-grid,
+  body.pdf-exporting .tracking-strip {
+    grid-template-columns: 1fr !important;
+  }
+  body.pdf-exporting .stat {
+    min-height: 0 !important;
+    padding: 9px !important;
+  }
+  body.pdf-exporting .stat span,
+  body.pdf-exporting .summary-card dt,
+  body.pdf-exporting .quarter-metrics span,
+  body.pdf-exporting .program-value-strip em {
+    font-size: 8.5px !important;
+  }
+  body.pdf-exporting .stat strong,
+  body.pdf-exporting .summary-card dd,
+  body.pdf-exporting .quarter-card strong,
+  body.pdf-exporting .quarter-metrics b,
+  body.pdf-exporting .program-value-strip strong {
+    font-size: 13px !important;
+    line-height: 1.05 !important;
+    word-break: normal !important;
+  }
+  body.pdf-exporting .program-list-label,
+  body.pdf-exporting .program-tabs,
+  body.pdf-exporting .channel-expanded {
+    max-height: none !important;
+  }
+  body.pdf-exporting .program-tab {
+    min-height: 0 !important;
+    padding: 7px !important;
+  }
+  body.pdf-exporting .waterfall-row {
+    grid-template-columns: 1.05fr 1.15fr .7fr !important;
+    gap: 7px !important;
+    min-height: 30px !important;
+    padding: 6px 0 !important;
+  }
+  body.pdf-exporting .waterfall-row strong,
+  body.pdf-exporting .mini-step strong {
+    font-size: 11px !important;
+  }
+  body.pdf-exporting .pipeline-waterfall-card svg,
+  body.pdf-exporting #pipelineWaterfallImage svg {
+    max-height: 3.9in !important;
+  }
+  body.pdf-exporting .program-section table {
+    font-size: 9px !important;
+  }
+  body.pdf-exporting .program-section th,
+  body.pdf-exporting .program-section td {
+    padding: 6px !important;
+  }
+  body.pdf-exporting .summary-table-wrap {
+    overflow: visible !important;
+  }
+  body.pdf-exporting table {
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+  body.pdf-exporting th,
+  body.pdf-exporting td {
+    overflow-wrap: anywhere !important;
+  }
+</style>
+
+<a href="#planner" class="skip-link">Skip to planner</a>
+<header class="topbar">
+  <nav class="nav" aria-label="Primary navigation">
+    <div class="brand" aria-label="Folloze">
+      <svg width="99" height="24" viewBox="0 0 99 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Folloze logo">
+        <path d="M37.3747 19.042C34.3649 18.9543 32.0086 17.8919 30.6521 15.2797C28.6819 11.498 30.4343 6.23478 35.8203 5.31858C38.6023 4.86049 41.1071 5.53301 43.0081 7.70655C44.7506 9.72413 45.0575 12.0828 44.1764 14.5195C43.2952 16.9952 41.3746 18.35 38.83 18.8666C38.3053 18.9933 37.7707 19.003 37.3747 19.042ZM37.2559 7.9892C35.0183 7.96971 33.2561 9.75337 33.2363 12.0633C33.2165 14.4318 34.9193 16.235 37.1965 16.2447C39.4538 16.2642 41.2358 14.4805 41.2358 12.1511C41.2655 9.82159 39.5132 7.9892 37.2559 7.9892Z" fill="#2C3D59"/>
+        <path d="M65.819 19.0422C62.5717 19.0031 59.8687 17.2975 58.8985 14.5196C57.4134 10.2993 59.8687 5.97169 64.5122 5.28942C67.2942 4.87031 69.7693 5.55258 71.6307 7.74559C74.6305 11.2252 73.4227 17.6678 67.4328 18.8666C66.8982 18.9933 66.3635 19.0031 65.819 19.0422ZM69.8188 12.3655C69.8188 10.4065 68.8882 8.94445 67.413 8.30116C65.5121 7.49218 63.3736 8.19396 62.3539 9.97761C61.2746 11.8295 61.8191 14.3539 63.5419 15.5235C64.8488 16.4104 66.2546 16.4982 67.6506 15.7867C69.1555 15.0362 69.7693 13.7106 69.8188 12.3655Z" fill="#2C3D59"/>
+        <path d="M89.7289 12.6678C89.6893 14.3832 91.2041 15.9525 92.9962 16.1767C94.5209 16.3716 95.8277 15.9135 97.0653 15.0655C97.194 14.9972 97.3029 14.9095 97.4019 14.8218C97.4217 14.8023 97.4415 14.8218 97.491 14.8023C97.9068 15.4748 98.3128 16.1279 98.7088 16.8199C98.7583 16.9271 98.6395 17.1903 98.5306 17.278C97.2237 18.282 95.7188 18.8862 94.0259 18.9739C91.8575 19.1006 89.8676 18.5841 88.2736 17.0343C86.6994 15.4846 86.1252 13.5742 86.2638 11.4397C86.4024 9.6073 87.0756 7.97958 88.5211 6.74174C90.7784 4.80214 94.5605 4.60721 96.7683 6.33238C98.3425 7.57022 98.9365 9.28565 98.9959 11.2058C99.0157 11.5372 98.9563 11.8588 98.9761 12.1902C98.9959 12.5801 98.8375 12.6483 98.4712 12.6483C95.7485 12.6288 92.9962 12.6288 90.2933 12.6288L89.7289 12.6678ZM89.8379 10.3773H95.5208C95.6495 9.05173 94.5308 7.81389 93.2041 7.74566C91.5209 7.61895 89.927 8.85679 89.8379 10.3773Z" fill="#2C3D59"/>
+        <path d="M73.7098 18.7105C73.7098 18.1257 73.69 17.6188 73.7296 17.1023C73.7494 16.9658 73.8385 16.8001 73.9276 16.6929C76.2444 13.9346 78.5512 11.186 80.8679 8.40816C80.8877 8.38866 80.8877 8.35942 80.9174 8.2717H79.0364C78.571 8.2717 78.0859 8.2717 77.6206 8.2717C76.9573 8.2717 76.7989 8.42765 76.7989 9.07094C76.7989 9.22689 76.7989 9.39258 76.7989 9.56802H73.7296C73.7791 8.52512 73.7989 7.48221 73.888 6.4588C73.9276 6.0202 74.3038 5.71805 74.7297 5.59134C74.9673 5.52312 75.2346 5.48413 75.4821 5.48413C78.67 5.46463 81.8679 5.48413 85.0559 5.48413C85.145 5.48413 85.2342 5.50362 85.3926 5.50362C85.3926 6.08842 85.4124 6.65374 85.3728 7.19956C85.3728 7.30677 85.2837 7.43348 85.2144 7.5212C83.0759 10.0846 80.9472 12.6383 78.8087 15.2016C78.6106 15.4355 78.3928 15.6597 78.1651 15.9229H79.7294C80.5016 15.9229 81.2541 15.9229 82.0263 15.9229C82.7985 15.9229 82.9074 15.8156 82.9272 15.0554C82.9272 14.9287 82.9272 14.8118 82.9272 14.6169H85.0262C85.9371 14.6169 85.9371 14.6169 85.9371 15.533C85.9371 16.1666 85.9569 16.8196 85.8876 17.4531C85.7787 18.2817 85.3134 18.6715 84.452 18.7105C84.3233 18.73 84.2045 18.7105 84.0758 18.7105H74.3929H73.7098Z" fill="#2C3D59"/>
+        <path d="M29.771 0.181885V3.02794C28.7513 3.02794 27.6919 2.95971 26.9593 3.82717C26.6227 4.21705 26.5138 4.71414 26.5831 5.48412H29.3849V8.09626H26.5732V18.652H23.197V8.11575H21.5634V5.50362H23.1376C23.1871 4.9578 23.1871 4.42173 23.296 3.93439C23.6524 1.95579 24.999 0.688717 27.1177 0.34758C27.979 0.220872 28.8602 0.240366 29.771 0.181885Z" fill="#2C3D59"/>
+        <path d="M58.057 15.9522V18.6715C56.7996 18.6715 55.562 18.7105 54.3245 18.652C53.6214 18.613 53.2452 18.1355 53.1561 17.4337C53.1165 17.2192 53.1165 16.995 53.1165 16.7806C53.1165 12.5408 53.1165 8.30096 53.1165 4.09036C53.1165 3.19366 53.0274 3.10593 52.1166 3.10593C51.473 3.10593 51.473 3.10593 51.473 2.43341C51.473 1.74139 51.473 1.07861 51.473 0.318359H53.5323C53.9483 0.318359 54.3542 0.318359 54.77 0.318359C55.8789 0.337853 56.4234 0.844684 56.4333 1.95582C56.4531 2.56987 56.4333 3.21315 56.4333 3.8272C56.4333 7.55046 56.4333 11.264 56.4333 14.9677C56.4333 15.8352 56.5422 15.9424 57.4233 15.9424C57.6411 15.9522 57.8193 15.9522 58.057 15.9522Z" fill="#2C3D59"/>
+        <path d="M51.4038 15.9525V18.6523C51.2751 18.6718 51.1662 18.6913 51.0474 18.6913C50.0574 18.6913 49.0772 18.7108 48.107 18.6913C47.1069 18.6718 46.6218 18.2527 46.5129 17.2584C46.4931 17.083 46.4931 16.8881 46.4931 16.6932C46.4931 12.4338 46.4931 8.20374 46.4931 3.9444C46.4931 3.16465 46.404 3.07694 45.612 3.07694C45.3743 3.07694 45.1466 3.07694 44.8991 3.07694V0.357588C44.9684 0.338094 45.0377 0.3186 45.1169 0.3186C46.1763 0.3186 47.2554 0.299107 48.305 0.3186C49.2356 0.338094 49.7405 0.815685 49.8099 1.71238C49.8297 1.9463 49.8296 2.17049 49.8296 2.41416C49.8296 6.59552 49.8296 10.7866 49.8296 14.9875C49.8296 15.855 49.9386 15.9622 50.8197 15.9622C51.0078 15.9525 51.2058 15.9525 51.4038 15.9525Z" fill="#2C3D59"/>
+        <path d="M0.0396118 14.9971C0.0396118 14.9971 0.376233 1.80972 15.9102 0.026062V7.24841C15.9102 7.24841 5.30672 6.35171 0.0396118 14.9971Z" fill="#2C3D59"/>
+        <path d="M0.0396024 23.74C0.0396024 23.74 0.16831 13.3013 8.96993 11.4006V15.7964C8.96993 15.7964 3.22759 16.6639 0 23.9739" fill="#2C3D59"/>
+      </svg>
+      <div class="customer-placeholder" aria-label="Customer name or logo placeholder">
+        <div class="customer-logo-placeholder" aria-hidden="true"></div>
+        <strong>Customer name / logo</strong>
+      </div>
+      <span>Folloze Joint Deployment Program Template Board</span>
+    </div>
+    <div class="navlinks">
+      <a href="#add-program-section" onclick="return scrollToPrograms(this, event, 'main nav header bar', 'anchor-click')">Planner</a>
+      <a href="#pipelineWaterfallImage" onclick="return viewWaterfallsImage(this, event, 'main nav header bar', 'anchor-click')">Waterfalls</a>
+      <div class="csm-picker">
+        <label for="customerCsm">Your Customer Success Manager</label>
+        <select id="customerCsm" onchange="updateCsm(this.value)">
+          <option value="Meghan Richardson">Meghan Richardson</option>
+          <option value="Matthew Brown">Matthew Brown</option>
+          <option value="Steven Nguyen">Steven Nguyen</option>
+          <option value="Flor Estrada">Flor Estrada</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Build. Activate. Signal.</div>
+        <h1 id="hero-title">Plan your next 12 months program mix from engagement to pipeline.</h1>
+        <p>Use this waterfall model to plan programs by quarter. Add program sections, choose standard or customer benchmarks, and see quarterly, cumulative, and full-year impact update in real time. Reconcile programs with your actual data once a program is live to compare against projections.</p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#add-program-section" onclick="return scrollToPrograms(this, event, 'main hero banner', 'cta_click')">Start planning</a>
+          <a class="secondary-btn" href="#pipelineWaterfallImage" onclick="return viewWaterfallsImage(this, event)">View waterfalls</a>
+          <button class="ghost-btn" type="button" onclick="exportSlideContent(this)">Output to slides</button>
+          <button class="ghost-btn" type="button" onclick="exportSheetContent(this)">Output to sheets</button>
+          <button class="ghost-btn" type="button" onclick="exportPdfContent(this)">Export PDF</button>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Standard benchmark waterfall">
+        <div class="panel-title">
+          <strong>Standard benchmark model</strong>
+          <span class="benchmark-note">customize with your own data at a pragmatic level</span>
+        </div>
+        <div class="mini-waterfall">
+          <div class="mini-step"><span>Accounts in market</span><div class="bar"><span style="width:100%"></span></div><strong>100%</strong></div>
+          <div class="mini-step"><span>Engaged accounts</span><div class="bar"><span style="width:30%"></span></div><strong>30%</strong></div>
+          <div class="mini-step"><span>Sales meetings</span><div class="bar"><span style="width:10%"></span></div><strong>10%</strong></div>
+          <div class="mini-step"><span>Pipeline opps</span><div class="bar"><span style="width:50%"></span></div><strong>50%</strong></div>
+          <div class="mini-step"><span>Closed deals</span><div class="bar"><span style="width:30%"></span></div><strong>30%</strong></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="planner" aria-labelledby="planner-title">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Interactive model</div>
+        <h2 id="planner-title">Build the year by quarter, tune benchmarks, model the waterfall.</h2>
+        <p>Each program works like a section in the spreadsheet and rolls into Q1, Q2, Q3, or Q4. Standard benchmarks are preloaded, and customer benchmarks can override the standard chain for any program.</p>
+      </div>
+      <button class="primary-btn" type="button" onclick="addProgramFromButton(this)">+ Program type</button>
+    </div>
+
+    <div class="planner-settings" aria-label="Company year settings">
+      <div class="field">
+        <label for="plan-activeYear">Planning year</label>
+        <select id="plan-activeYear" onchange="updatePlanSetting('activeYear', this.value)">
+          <option value="2026" selected>2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="plan-startQuarter">Company year starts</label>
+        <select id="plan-startQuarter" onchange="updatePlanSetting('startQuarter', this.value)">
+          <option value="Q1" selected>Q1</option>
+          <option value="Q2">Q2</option>
+          <option value="Q3">Q3</option>
+          <option value="Q4">Q4</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Quarter order</label>
+        <input id="quarterOrderPreview" type="text" value="Q1 -> Q2 -> Q3 -> Q4" readonly>
+      </div>
+    </div>
+
+    <div class="totals" aria-label="Portfolio totals">
+      <div class="stat"><span>Programs</span><strong id="totalPrograms">0</strong><em>Active program sections</em></div>
+      <div class="stat"><span>Pipeline goal</span><strong id="totalPipeline">$0</strong><em>Modeled pipeline</em></div>
+      <div class="stat"><span>Bookings</span><strong id="totalBookings">$0</strong><em>Modeled closed-won value</em></div>
+      <div class="stat"><span>Sales meetings</span><strong id="totalMeetings">0</strong><em>Scheduled from engagement</em></div>
+    </div>
+    <div class="quarter-rollup" id="quarterRollup" aria-label="Quarter rollup"></div>
+
+    <div class="builder-shell" id="add-program-section">
+      <aside class="program-list" aria-label="Program list">
+        <div class="program-list-label">Programs</div>
+        <div class="list-actions">
+          <button class="secondary-btn" type="button" onclick="addProgramFromButton(this)">Add</button>
+          <button class="ghost-btn" type="button" onclick="duplicateActiveProgram(this)">Duplicate</button>
+        </div>
+        <div class="program-tabs" id="programTabs" role="tablist" aria-label="Programs"></div>
+      </aside>
+
+      <div class="program-editor" id="programEditor" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <div class="summary-band" id="portfolio">
+    <section class="section summary-section" aria-labelledby="portfolio-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Portfolio rollup</div>
+          <h2 id="portfolio-title">The plan stays honest because every total ties back to a quarterly program row.</h2>
+          <p>Quarter and full-year totals roll up from the waterfall calculations. The model is deliberately transparent: the assumptions are visible, editable, and attached to the program that uses them.</p>
+        </div>
+      </div>
+      <div class="summary-grid" id="portfolioCards"></div>
+      <div class="cumulative-table" id="cumulativeSummary" aria-label="Cumulative quarterly summary"></div>
+    </section>
+  </div>
+
+  <section class="section waterfall-visual-section" id="pipeline-waterfall" aria-labelledby="pipeline-waterfall-title">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Cumulative waterfall</div>
+        <h2 id="pipeline-waterfall-title">See the full-year program plan as one pipeline waterfall.</h2>
+        <p>The image below turns the cumulative program details into a single visual path from targeted accounts to modeled pipeline and bookings.</p>
+      </div>
+    </div>
+    <figure class="visual-card">
+      <img id="pipelineWaterfallImage" alt="Cumulative pipeline waterfall visual showing program details from accounts targeted through pipeline and bookings">
+      <figcaption class="visual-caption" id="pipelineWaterfallCaption">Cumulative waterfall updates as program details and benchmarks change.</figcaption>
+    </figure>
+  </section>
+
+  <section class="section" id="sections" aria-labelledby="sections-title">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Waterfall sections</div>
+        <h2 id="sections-title">Every quarter gets ready-to-share program waterfalls.</h2>
+        <p>These sections mirror the planning sheet while giving customers a clearer view of the quarterly program detail, selected benchmarks, and modeled business value.</p>
+      </div>
+      <div class="section-actions">
+        <button class="primary-btn" type="button" onclick="exportSlideContent(this)">Output to slides</button>
+        <button class="primary-btn" type="button" onclick="exportSheetContent(this)">Output to sheets</button>
+        <button class="primary-btn" type="button" onclick="exportPdfContent(this)">Export PDF</button>
+      </div>
+    </div>
+    <div id="waterfallSections"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>Folloze Joint Deployment Program Template Board</strong>
+    <span>Build personalized programs. Activate the right experiences. Signal what moves pipeline.</span>
+  </div>
+</footer>
+
+<script>
+  window.flzAnalytic = window.flzAnalytic || function(action, payload) {
+    window.__flzEvents = window.__flzEvents || [];
+    window.__flzEvents.push({ action, payload });
+  };
+
+  const standardBenchmarks = {
+    inMarket: 1,
+    engaged: 0.30,
+    meeting: 0.10,
+    pipeline: 0.50,
+    close: 0.30
+  };
+  const customerBenchmarkMode = 'Customer';
+
+  const programTypes = [
+    '1:1 ABM',
+    '1:few ABM',
+    '1:many ABM',
+    'Executive program',
+    'Event follow-up',
+    'Digital deal room',
+    'Renewal / QBR',
+    'Customer expansion',
+    'Web Engager Program',
+    'Resource Center',
+    'Enablement Program',
+    'Newsletter',
+    'Test',
+    'New Product Launch',
+    'Content Hub',
+    'Article Hub',
+    'Other'
+  ];
+  const marketingChannels = [
+    'Integrated mix',
+    'Email',
+    'Web / Website',
+    'SEO',
+    'Resource center',
+    'Digital advertising',
+    'Display advertising',
+    'Paid search',
+    'Paid social',
+    'LinkedIn',
+    'Organic social',
+    'Webinar',
+    'Field event',
+    'Executive event',
+    'Content syndication',
+    'Direct mail',
+    'Partner / co-marketing',
+    'Sales outreach',
+    'Customer community',
+    'Newsletter',
+    'Other'
+  ];
+  const contentCategories = [
+    'Thought leadership',
+    'Solution proof',
+    'Case study',
+    'Customer story',
+    'Product overview',
+    'New product announcement',
+    'Use case guide',
+    'Industry content',
+    'Executive brief',
+    'ROI / business case',
+    'Analyst report',
+    'Whitepaper',
+    'Ebook',
+    'Article / blog',
+    'Webinar replay',
+    'Demo / product tour',
+    'Comparison guide',
+    'Implementation guide',
+    'Best practices',
+    'Event follow-up',
+    'Newsletter content',
+    'Other'
+  ];
+  const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+  const programYears = ['2026', '2027', '2028', '2029'];
+
+  let programs = [
+    {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      quarter: 'Q1',
+      programYear: '2026',
+      type: '1:1 ABM',
+      name: 'Example Program (replace)',
+      segment: 'Target account segment',
+      subSegment: 'Priority audience',
+      channels: ['Integrated mix'],
+      content: 'Thought leadership',
+      secondaryContent: 'Solution proof',
+      notes: 'Replace this example row with the customer program details.',
+      locked: false,
+      mode: 'Standard',
+      accounts: 1200,
+      dealSize: 5000000,
+      projectedBoards: 1,
+      actual: { liveBoards: 0, inMarket: 0, engaged: 0, meetings: 0, pipelineOpps: 0, closedDeals: 0, pipelineGoal: 0, bookings: 0 },
+      custom: { ...standardBenchmarks }
+    }
+  ];
+  let activeId = programs[0].id;
+  let selectedCsm = 'Meghan Richardson';
+  let planSettings = {
+    startQuarter: 'Q1',
+    activeYear: '2026'
+  };
+  let channelEditorOpen = {};
+  let channelDrafts = {};
+
+  const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const compactCurrency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 });
+  const whole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+  const pct = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0 });
+  const slidesDeckUrl = 'SLIDES_DECK_URL_PLACEHOLDER';
+  const sheetsOutputUrl = 'SHEETS_OUTPUT_URL_PLACEHOLDER';
+  const sheetBuilderEndpoint = 'SHEET_BUILDER_ENDPOINT_URL_PLACEHOLDER';
+  const boardStateEndpoint = 'BOARD_STATE_ENDPOINT_URL_PLACEHOLDER';
+  const sheetTemplateUrl = 'https://docs.google.com/spreadsheets/d/1IQNrquCt4rRdaUcSAiUvMLf1Icu6YOzuikSQLYpIvyQ/edit';
+  let stateSaveTimer = null;
+  let remoteStateTimer = null;
+  let restoringState = false;
+
+  function money(value) {
+    const amount = Number(value) || 0;
+    return Math.abs(amount) >= 1000000000 ? compactCurrency.format(amount) : currency.format(amount);
+  }
+
+  function safeAnalytic(action, payload, el) {
+    if (typeof flzAnalytic === 'function') {
+      flzAnalytic(action, payload, el);
+    }
+  }
+
+  function boardStateKey() {
+    const path = `${window.location.origin || 'file'}${window.location.pathname || document.title}`;
+    return `folloze-jdp-board-state:${path}`;
+  }
+
+  function canUseBoardStateEndpoint() {
+    return Boolean(boardStateEndpoint && !boardStateEndpoint.includes('PLACEHOLDER'));
+  }
+
+  function stateSnapshot() {
+    return {
+      version: 1,
+      boardKey: boardStateKey(),
+      customerName: customerNameForSheet(),
+      selectedCsm,
+      activeId,
+      planSettings: { ...planSettings },
+      programs: programs.map(program => ({
+        ...program,
+        channels: normalizeChannels(program.channels),
+        custom: { ...standardBenchmarks, ...(program.custom || {}) },
+        actual: { liveBoards: 0, engaged: 0, meetings: 0, pipelineOpps: 0, closedDeals: 0, pipelineGoal: 0, bookings: 0, ...(program.actual || {}) }
+      })),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  function normalizeProgramState(program, index) {
+    return {
+      id: program.id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + index)),
+      quarter: quarters.includes(program.quarter) ? program.quarter : 'Q1',
+      programYear: programYears.includes(String(program.programYear)) ? String(program.programYear) : planSettings.activeYear,
+      type: program.type || '1:few ABM',
+      name: program.name || `Program ${index + 1}`,
+      segment: program.segment || '',
+      subSegment: program.subSegment || '',
+      channels: normalizeChannels(program.channels),
+      content: program.content || '',
+      secondaryContent: program.secondaryContent || '',
+      notes: program.notes || '',
+      locked: Boolean(program.locked),
+      mode: isCustomerBenchmarkMode(program.mode) ? customerBenchmarkMode : 'Standard',
+      accounts: Number(program.accounts) || 0,
+      dealSize: Number(program.dealSize) || 0,
+      projectedBoards: Number(program.projectedBoards) || 0,
+      actual: { liveBoards: 0, engaged: 0, meetings: 0, pipelineOpps: 0, closedDeals: 0, pipelineGoal: 0, bookings: 0, ...(program.actual || {}) },
+      custom: { ...standardBenchmarks, ...(program.custom || {}) }
+    };
+  }
+
+  function saveLocalState(snapshot = stateSnapshot()) {
+    try {
+      localStorage.setItem(boardStateKey(), JSON.stringify(snapshot));
+      safeAnalytic('state_local_save', { text: 'Local board state saved', area: 'program planner', customerName: snapshot.customerName });
+    } catch (error) {
+      safeAnalytic('state_local_save_error', { text: error.message || 'Local save failed', area: 'program planner' });
+    }
+  }
+
+  function remoteSaveState(snapshot) {
+    if (!canUseBoardStateEndpoint()) return;
+    const body = new URLSearchParams();
+    body.set('action', 'save');
+    body.set('boardKey', boardStateKey());
+    body.set('payload', JSON.stringify(snapshot));
+    fetch(boardStateEndpoint, { method: 'POST', mode: 'no-cors', body }).catch(error => {
+      safeAnalytic('state_remote_save_error', { text: error.message || 'Remote save failed', area: 'program planner' });
+    });
+  }
+
+  function persistState() {
+    if (restoringState) return;
+    const snapshot = stateSnapshot();
+    saveLocalState(snapshot);
+    clearTimeout(remoteStateTimer);
+    remoteStateTimer = setTimeout(() => remoteSaveState(snapshot), 900);
+  }
+
+  function persistStateDebounced() {
+    if (restoringState) return;
+    clearTimeout(stateSaveTimer);
+    stateSaveTimer = setTimeout(persistState, 350);
+  }
+
+  function applySavedState(state, source = 'local') {
+    if (!state || !Array.isArray(state.programs) || !state.programs.length) return false;
+    restoringState = true;
+    programs = state.programs.map(normalizeProgramState);
+    planSettings = { ...planSettings, ...(state.planSettings || {}) };
+    selectedCsm = state.selectedCsm || selectedCsm;
+    activeId = programs.some(program => program.id === state.activeId) ? state.activeId : programs[0].id;
+    channelEditorOpen = {};
+    channelDrafts = {};
+    render();
+    saveLocalState({ ...state, boardKey: boardStateKey(), updatedAt: state.updatedAt || new Date().toISOString() });
+    safeAnalytic('state_restore', { text: `Board state restored from ${source}`, area: 'program planner', customerName: state.customerName || customerNameForSheet() });
+    restoringState = false;
+    return true;
+  }
+
+  function restoreLocalState() {
+    try {
+      const saved = localStorage.getItem(boardStateKey());
+      return saved ? applySavedState(JSON.parse(saved), 'local storage') : false;
+    } catch (error) {
+      safeAnalytic('state_local_restore_error', { text: error.message || 'Local restore failed', area: 'program planner' });
+      return false;
+    }
+  }
+
+  function loadRemoteState() {
+    if (!canUseBoardStateEndpoint()) return;
+    const callbackName = `follozeBoardState_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+    const script = document.createElement('script');
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+    };
+    window[callbackName] = response => {
+      clearTimeout(script._stateTimeout);
+      if (response && response.payload) {
+        const local = JSON.parse(localStorage.getItem(boardStateKey()) || 'null');
+        const remoteUpdated = Date.parse(response.payload.updatedAt || 0);
+        const localUpdated = Date.parse(local && local.updatedAt ? local.updatedAt : 0);
+        if (!local || remoteUpdated >= localUpdated) applySavedState(response.payload, 'shared storage');
+      }
+      cleanup();
+    };
+    const url = new URL(boardStateEndpoint);
+    url.searchParams.set('action', 'load');
+    url.searchParams.set('boardKey', boardStateKey());
+    url.searchParams.set('callback', callbackName);
+    script.src = url.toString();
+    script._stateTimeout = setTimeout(() => {
+      cleanup();
+      safeAnalytic('state_remote_load_timeout', { text: 'Shared state load timed out', area: 'program planner' });
+    }, 7000);
+    script.onerror = () => {
+      clearTimeout(script._stateTimeout);
+      cleanup();
+      safeAnalytic('state_remote_load_error', { text: 'Shared state load failed', area: 'program planner' });
+    };
+    document.body.appendChild(script);
+  }
+
+  function customerNameFromHero() {
+    const headline = document.getElementById('hero-title').textContent.trim();
+    const match = headline.match(/^Plan (.+?)'s one-year/i);
+    const placeholder = document.querySelector('.customer-placeholder strong');
+    const placeholderName = placeholder ? placeholder.textContent.trim() : '';
+    const name = (match ? match[1] : placeholderName)
+      .replace(/^your customer$/i, 'Customer')
+      .replace(/^customer name\s*\/\s*logo$/i, 'Customer')
+      .trim();
+    return name || 'Customer';
+  }
+
+  function viewWaterfallsImage(link, event, area = 'main hero banner', action = 'cta_click') {
+    if (event) event.preventDefault();
+    safeAnalytic(action, { text: link.innerText.trim(), area }, link);
+    const image = document.getElementById('pipelineWaterfallImage');
+    if (image) {
+      image.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', '#pipelineWaterfallImage');
+    }
+    return false;
+  }
+
+  function scrollToPrograms(link, event, area = 'main hero banner', action = 'cta_click') {
+    if (event) event.preventDefault();
+    safeAnalytic(action, { text: link.innerText.trim(), area }, link);
+    const programsSection = document.getElementById('add-program-section');
+    if (programsSection) {
+      programsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', '#add-program-section');
+    }
+    return false;
+  }
+
+  function benchmarkFor(program) {
+    return isCustomerBenchmarkMode(program.mode) ? program.custom : standardBenchmarks;
+  }
+
+  function isCustomerBenchmarkMode(mode) {
+    return mode === customerBenchmarkMode || mode === 'Custom';
+  }
+
+  function normalizeChannels(value) {
+    if (Array.isArray(value)) return value.filter(Boolean);
+    if (!value) return [];
+    return String(value).split(',').map(item => item.trim()).filter(Boolean);
+  }
+
+  function channelsLabel(value) {
+    const channels = normalizeChannels(value);
+    return channels.length ? channels.join(', ') : 'No channels selected';
+  }
+
+  function actualsFor(program) {
+    const actual = program.actual || {};
+    return {
+      liveBoards: Number(actual.liveBoards) || 0,
+      engaged: Number(actual.engaged) || 0,
+      meetings: Number(actual.meetings) || 0,
+      pipelineOpps: Number(actual.pipelineOpps) || 0,
+      closedDeals: Number(actual.closedDeals) || 0,
+      pipelineGoal: Number(actual.pipelineGoal) || 0,
+      bookings: Number(actual.bookings) || 0
+    };
+  }
+
+  function attainment(actual, projected) {
+    return projected > 0 ? actual / projected : 0;
+  }
+
+  function quarterSequence() {
+    const start = quarters.indexOf(planSettings.startQuarter);
+    return start <= 0 ? [...quarters] : quarters.slice(start).concat(quarters.slice(0, start));
+  }
+
+  function periodLabel(year, quarter) {
+    return `${year || planSettings.activeYear} ${quarter || 'Q1'}`;
+  }
+
+  function fiscalQuarterIndex(quarter) {
+    const index = quarterSequence().indexOf(quarter || 'Q1');
+    return index < 0 ? 0 : index;
+  }
+
+  function periodSortValue(program) {
+    return Number(program.programYear || planSettings.activeYear) * 10 + fiscalQuarterIndex(program.quarter);
+  }
+
+  function orderedPrograms() {
+    return [...programs].sort((a, b) => periodSortValue(a) - periodSortValue(b) || programs.indexOf(a) - programs.indexOf(b));
+  }
+
+  function calculate(program) {
+    const b = benchmarkFor(program);
+    const accounts = Number(program.accounts) || 0;
+    const dealSize = Number(program.dealSize) || 0;
+    const projectedBoards = Number(program.projectedBoards) || 0;
+    const actual = actualsFor(program);
+    const inMarket = Math.round(accounts * b.inMarket);
+    const engaged = Math.round(inMarket * b.engaged);
+    const meetings = Math.round(engaged * b.meeting);
+    const pipelineOpps = Math.round(meetings * b.pipeline);
+    const closedDeals = Math.round(pipelineOpps * b.close);
+    return {
+      b,
+      accounts,
+      dealSize,
+      inMarket,
+      engaged,
+      meetings,
+      pipelineOpps,
+      closedDeals,
+      pipelineGoal: dealSize * pipelineOpps,
+      bookings: dealSize * closedDeals,
+      projectedBoards,
+      actual,
+      variance: {
+        liveBoards: actual.liveBoards - projectedBoards,
+        engaged: actual.engaged - engaged,
+        meetings: actual.meetings - meetings,
+        pipelineOpps: actual.pipelineOpps - pipelineOpps,
+        closedDeals: actual.closedDeals - closedDeals,
+        pipelineGoal: actual.pipelineGoal - (dealSize * pipelineOpps),
+        bookings: actual.bookings - (dealSize * closedDeals)
+      },
+      attainment: {
+        liveBoards: attainment(actual.liveBoards, projectedBoards),
+        engaged: attainment(actual.engaged, engaged),
+        meetings: attainment(actual.meetings, meetings),
+        pipelineOpps: attainment(actual.pipelineOpps, pipelineOpps),
+        closedDeals: attainment(actual.closedDeals, closedDeals),
+        pipelineGoal: attainment(actual.pipelineGoal, dealSize * pipelineOpps),
+        bookings: attainment(actual.bookings, dealSize * closedDeals)
+      }
+    };
+  }
+
+  function totals(sourcePrograms = programs) {
+    return sourcePrograms.reduce((acc, p) => {
+      const c = calculate(p);
+      acc.accounts += c.accounts;
+      acc.inMarket += c.inMarket;
+      acc.engaged += c.engaged;
+      acc.meetings += c.meetings;
+      acc.pipelineOpps += c.pipelineOpps;
+      acc.closedDeals += c.closedDeals;
+      acc.pipelineGoal += c.pipelineGoal;
+      acc.bookings += c.bookings;
+      acc.projectedBoards += c.projectedBoards;
+      acc.actualLiveBoards += c.actual.liveBoards;
+      acc.actualEngaged += c.actual.engaged;
+      acc.actualMeetings += c.actual.meetings;
+      acc.actualPipelineOpps += c.actual.pipelineOpps;
+      acc.actualClosedDeals += c.actual.closedDeals;
+      acc.actualPipelineGoal += c.actual.pipelineGoal;
+      acc.actualBookings += c.actual.bookings;
+      return acc;
+    }, { programs: sourcePrograms.length, accounts: 0, inMarket: 0, engaged: 0, meetings: 0, pipelineOpps: 0, closedDeals: 0, pipelineGoal: 0, bookings: 0, projectedBoards: 0, actualLiveBoards: 0, actualEngaged: 0, actualMeetings: 0, actualPipelineOpps: 0, actualClosedDeals: 0, actualPipelineGoal: 0, actualBookings: 0 });
+  }
+
+  function programsForPeriod(year, quarter) {
+    return programs.filter(p => String(p.programYear || planSettings.activeYear) === String(year) && (p.quarter || 'Q1') === quarter);
+  }
+
+  function periodDefinitions() {
+    return programYears.flatMap(year => quarterSequence().map(quarter => ({
+      year,
+      quarter,
+      label: periodLabel(year, quarter)
+    })));
+  }
+
+  function quarterTotals() {
+    return periodDefinitions().map(period => ({
+      ...period,
+      programs: programsForPeriod(period.year, period.quarter),
+      totals: totals(programsForPeriod(period.year, period.quarter))
+    }));
+  }
+
+  function visiblePeriodTotals() {
+    return quarterTotals().filter(period => period.year === planSettings.activeYear || period.programs.length);
+  }
+
+  function cumulativeQuarterTotals() {
+    let running = [];
+    return visiblePeriodTotals().map(period => {
+      running = running.concat(period.programs);
+      return { ...period, totals: totals(running) };
+    });
+  }
+
+  function boardGrowth(periods, index) {
+    const current = periods[index].totals.actualLiveBoards;
+    const previous = index > 0 ? periods[index - 1].totals.actualLiveBoards : 0;
+    if (!current && !previous) return '0%';
+    if (!previous) return 'New';
+    return pct.format((current - previous) / previous);
+  }
+
+  function updateProgram(id, key, value) {
+    const program = programs.find(p => p.id === id);
+    if (!program) return;
+    if (program.locked && key !== 'locked') return;
+    if (key === 'locked') {
+      program.locked = value === true || value === 'true';
+      render();
+      persistStateDebounced();
+      safeAnalytic('program_lock_toggle', { text: program.locked ? 'Lock program' : 'Unlock program', area: 'program planner', value: String(program.locked) });
+      return;
+    }
+    if (key.includes('.')) {
+      const [group, subKey] = key.split('.');
+      if (group === 'custom') {
+        program.custom[subKey] = Number(value) / 100;
+        program.mode = customerBenchmarkMode;
+      } else if (group === 'actual') {
+        program.actual = program.actual || {};
+        program.actual[subKey] = Number(value) || 0;
+      }
+    } else if (key === 'accounts' || key === 'dealSize' || key === 'projectedBoards') {
+      program[key] = Number(value);
+    } else {
+      program[key] = value;
+    }
+    if (key === 'mode' || key.startsWith('custom.')) {
+      renderEditor();
+    }
+    renderLiveOutputs();
+    persistStateDebounced();
+    safeAnalytic('model_update', { text: key, area: 'program planner', value: String(value) });
+  }
+
+  function updatePlanSetting(key, value) {
+    planSettings[key] = value;
+    render();
+    persistStateDebounced();
+    safeAnalytic('model_update', { text: key, area: 'program planner settings', value: String(value) });
+  }
+
+  function openChannelEditor(id) {
+    const program = programs.find(p => p.id === id);
+    if (!program || program.locked) return;
+    channelEditorOpen[id] = true;
+    channelDrafts[id] = normalizeChannels(program.channels);
+    renderEditor();
+    safeAnalytic('channel_editor_open', { text: 'Edit channels', area: 'program planner' });
+  }
+
+  function toggleDraftChannel(id, channel, checked) {
+    const program = programs.find(p => p.id === id);
+    if (!program || program.locked) return;
+    const selected = new Set(channelDrafts[id] || normalizeChannels(program.channels));
+    if (checked) {
+      selected.add(channel);
+    } else {
+      selected.delete(channel);
+    }
+    channelDrafts[id] = Array.from(selected);
+    safeAnalytic('channel_draft_update', { text: 'channels', area: 'program planner', value: channelsLabel(channelDrafts[id]) });
+  }
+
+  function submitChannels(id) {
+    const program = programs.find(p => p.id === id);
+    if (!program || program.locked) return;
+    program.channels = normalizeChannels(channelDrafts[id] || program.channels);
+    channelEditorOpen[id] = false;
+    delete channelDrafts[id];
+    renderLiveOutputs();
+    renderEditor();
+    persistStateDebounced();
+    safeAnalytic('model_update', { text: 'channels', area: 'program planner', value: channelsLabel(program.channels) });
+  }
+
+  function updateCsm(value) {
+    selectedCsm = value;
+    renderSections();
+    persistStateDebounced();
+    safeAnalytic('model_update', { text: 'Your Customer Success Manager', area: 'main nav header bar', value });
+  }
+
+  function addProgram(seed = {}) {
+    const next = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+      quarter: seed.quarter || 'Q1',
+      programYear: seed.programYear || planSettings.activeYear,
+      type: seed.type || '1:few ABM',
+      name: seed.name || `Program ${programs.length + 1}`,
+      segment: seed.segment || '',
+      subSegment: seed.subSegment || '',
+      channels: normalizeChannels(seed.channels),
+      content: seed.content || '',
+      secondaryContent: seed.secondaryContent || '',
+      notes: seed.notes || '',
+      locked: Boolean(seed.locked),
+      mode: isCustomerBenchmarkMode(seed.mode) ? customerBenchmarkMode : 'Standard',
+      accounts: seed.accounts || 0,
+      dealSize: seed.dealSize || 0,
+      projectedBoards: seed.projectedBoards || 0,
+      actual: seed.actual ? { ...seed.actual } : { liveBoards: 0, engaged: 0, meetings: 0, pipelineOpps: 0, closedDeals: 0, pipelineGoal: 0, bookings: 0 },
+      custom: seed.custom ? { ...seed.custom } : { ...standardBenchmarks }
+    };
+    programs.push(next);
+    activeId = next.id;
+    render();
+    persistStateDebounced();
+    safeAnalytic('program_add', { text: next.type, area: 'program planner' });
+  }
+
+  function addProgramFromButton(button) {
+    flzAnalytic('cta_click', { text: button.innerText.trim(), area: 'program planner' }, button);
+    addProgram();
+  }
+
+  function duplicateActiveProgram(button) {
+    flzAnalytic('cta_click', { text: button.innerText.trim(), area: 'program planner' }, button);
+    const active = programs.find(p => p.id === activeId);
+    if (!active) return;
+    addProgram({ ...active, name: `${active.name} copy`, custom: { ...active.custom } });
+  }
+
+  function reorderPrograms(draggedId, targetId) {
+    if (!draggedId || !targetId || draggedId === targetId) return;
+    const from = programs.findIndex(program => program.id === draggedId);
+    const to = programs.findIndex(program => program.id === targetId);
+    if (from < 0 || to < 0) return;
+    const [moved] = programs.splice(from, 1);
+    programs.splice(to, 0, moved);
+    render();
+    persistStateDebounced();
+    safeAnalytic('program_reorder', { text: moved.name || moved.type, area: 'program planner', from: from + 1, to: to + 1 });
+  }
+
+  function handleProgramDragStart(event, id) {
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', id);
+    event.currentTarget.classList.add('dragging');
+  }
+
+  function handleProgramDragEnd(event) {
+    event.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('.program-tab-row.drag-over').forEach(row => row.classList.remove('drag-over'));
+  }
+
+  function handleProgramDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    event.currentTarget.classList.add('drag-over');
+  }
+
+  function handleProgramDragLeave(event) {
+    event.currentTarget.classList.remove('drag-over');
+  }
+
+  function handleProgramDrop(event, targetId) {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+    reorderPrograms(event.dataTransfer.getData('text/plain'), targetId);
+  }
+
+  function removeProgram(id, button) {
+    const doomed = programs.find(p => p.id === id);
+    if (!doomed || doomed.locked) {
+      safeAnalytic('program_remove_blocked', { text: doomed ? doomed.name : 'program', area: 'program planner' }, button);
+      return;
+    }
+    programs = programs.filter(p => p.id !== id);
+    delete channelEditorOpen[id];
+    delete channelDrafts[id];
+    activeId = programs[0] ? programs[0].id : null;
+    render();
+    persistStateDebounced();
+    flzAnalytic('cta_click', { text: button ? button.innerText.trim() : 'Delete', area: 'program planner' }, button);
+    safeAnalytic('program_remove', { text: doomed ? doomed.name : 'program', area: 'program planner' });
+  }
+
+  function setActive(id, button) {
+    activeId = id;
+    render();
+    persistStateDebounced();
+    safeAnalytic('tab-switch', { text: button.innerText.trim(), area: 'program planner' }, button);
+  }
+
+  function inputField(program, key, label, value, type = 'text', opts = {}) {
+    const id = `${key.replace('.', '-')}-${program.id}`;
+    const attr = type === 'number' ? `inputmode="decimal" min="${opts.min ?? 0}" step="${opts.step ?? 1}"` : '';
+    const disabled = program.locked ? 'disabled' : '';
+    return `<div class="${opts.wide ? 'wide-field' : 'field'}">
+      <label for="${id}">${label}</label>
+      <input id="${id}" type="${type}" ${attr} ${disabled} value="${escapeHtml(value ?? '')}" oninput="updateProgram('${program.id}', '${key}', this.value)">
+    </div>`;
+  }
+
+  function textareaField(program, key, label, value) {
+    const id = `${key}-${program.id}`;
+    const disabled = program.locked ? 'disabled' : '';
+    return `<div class="wide-field">
+      <label for="${id}">${label}</label>
+      <textarea id="${id}" ${disabled} oninput="updateProgram('${program.id}', '${key}', this.value)">${escapeHtml(value ?? '')}</textarea>
+    </div>`;
+  }
+
+  function selectField(program, key, label, value, choices, opts = {}) {
+    const id = `${key}-${program.id}`;
+    const disabled = program.locked ? 'disabled' : '';
+    return `<div class="${opts.wide ? 'wide-field' : 'field'}">
+      <label for="${id}">${label}</label>
+      <select id="${id}" ${disabled} onchange="updateProgram('${program.id}', '${key}', this.value)">
+        ${choices.map(choice => `<option value="${escapeHtml(choice)}" ${choice === value ? 'selected' : ''}>${escapeHtml(choice)}</option>`).join('')}
+      </select>
+    </div>`;
+  }
+
+  function channelField(program) {
+    const isOpen = Boolean(channelEditorOpen[program.id]) && !program.locked;
+    const draft = isOpen ? normalizeChannels(channelDrafts[program.id] || program.channels) : normalizeChannels(program.channels);
+    const selected = new Set(draft);
+    const disabled = program.locked ? 'disabled' : '';
+    const buttonDisabled = program.locked ? 'disabled' : '';
+    return `<div class="wide-field">
+      <label>Channels</label>
+      <div class="channel-picker">
+        <div class="channel-picker-head">
+          <span>${escapeHtml(channelsLabel(program.channels))}</span>
+          <button class="channel-edit-btn" type="button" ${buttonDisabled} onclick="openChannelEditor('${program.id}')">Edit</button>
+        </div>
+        ${isOpen ? `
+          <div class="channel-options">
+            ${marketingChannels.map(channel => `
+              <label>
+                <input type="checkbox" ${disabled} value="${escapeHtml(channel)}" ${selected.has(channel) ? 'checked' : ''} onchange="toggleDraftChannel('${program.id}', this.value, this.checked)">
+                ${escapeHtml(channel)}
+              </label>
+            `).join('')}
+          </div>
+          <div class="channel-actions">
+            <button class="channel-submit-btn" type="button" ${buttonDisabled} onclick="submitChannels('${program.id}')">Submit</button>
+          </div>
+        ` : ''}
+      </div>
+    </div>`;
+  }
+
+  function planSettingSelect(key, label, value, choices) {
+    return `<div class="field">
+      <label for="plan-${key}">${label}</label>
+      <select id="plan-${key}" onchange="updatePlanSetting('${key}', this.value)">
+        ${choices.map(choice => `<option value="${escapeHtml(choice)}" ${choice === value ? 'selected' : ''}>${escapeHtml(choice)}</option>`).join('')}
+      </select>
+    </div>`;
+  }
+
+  function renderTabs() {
+    const tabs = document.getElementById('programTabs');
+    if (!programs.length) {
+      tabs.innerHTML = '<div class="empty">No programs yet. Add a program type to start Q1.</div>';
+      return;
+    }
+    tabs.innerHTML = programs.map((program, index) => {
+      const c = calculate(program);
+      return `<div class="program-tab-row" draggable="true" data-program-id="${program.id}" ondragstart="handleProgramDragStart(event, '${program.id}')" ondragend="handleProgramDragEnd(event)" ondragover="handleProgramDragOver(event)" ondragleave="handleProgramDragLeave(event)" ondrop="handleProgramDrop(event, '${program.id}')">
+        <button class="drag-handle" type="button" aria-label="Drag ${escapeHtml(program.name || program.type)} to reorder" title="Drag to reorder">⋮⋮</button>
+        <button class="program-tab" type="button" role="tab" aria-selected="${program.id === activeId}" onclick="setActive('${program.id}', this)">
+          <strong>${index + 1}. ${escapeHtml(periodLabel(program.programYear || planSettings.activeYear, program.quarter || 'Q1'))} · ${escapeHtml(program.type)}</strong>
+          <small>${escapeHtml(program.name || 'Unnamed program')} · ${money(c.pipelineGoal)} pipeline</small>
+        </button>
+        <button class="delete-tab-btn" type="button" ${program.locked ? 'disabled' : ''} onclick="removeProgram('${program.id}', this)" aria-label="Delete ${escapeHtml(program.name || program.type)}">Delete</button>
+      </div>`;
+    }).join('');
+  }
+
+  function renderEditor() {
+    const program = programs.find(p => p.id === activeId) || programs[0];
+    if (!program) {
+      document.getElementById('programEditor').innerHTML = `
+        <div class="empty">
+          <strong>No programs in the one-year plan yet.</strong>
+          <p>Add a program type to create the first quarterly waterfall section.</p>
+          <button class="primary-btn" type="button" onclick="addProgramFromButton(this)">+ Program type</button>
+        </div>`;
+      return;
+    }
+    const c = calculate(program);
+    const actual = c.actual;
+    const maxStage = Math.max(c.accounts, c.inMarket, c.engaged, c.meetings, c.pipelineOpps, c.closedDeals, 1);
+    document.getElementById('programEditor').innerHTML = `
+      <div class="lock-toggle">
+        <div>
+          <span>${program.locked ? 'Program locked' : 'Program unlocked'}</span>
+          <small>${program.locked ? 'Unlock to edit this program.' : 'Lock to prevent accidental edits.'}</small>
+        </div>
+        <label class="lock-switch" for="locked-${program.id}">
+          <input id="locked-${program.id}" type="checkbox" ${program.locked ? 'checked' : ''} onchange="updateProgram('${program.id}', 'locked', this.checked)">
+          ${program.locked ? 'Locked' : 'Unlocked'}
+        </label>
+      </div>
+      <div class="editor-grid">
+        ${selectField(program, 'programYear', 'Program Year', String(program.programYear || planSettings.activeYear), programYears)}
+        ${selectField(program, 'quarter', 'Quarter', program.quarter || 'Q1', quarters)}
+        ${selectField(program, 'type', '+ Program Type', program.type, programTypes)}
+        ${inputField(program, 'name', 'Program Name', program.name, 'text', { wide: true })}
+        ${inputField(program, 'segment', 'Primary Segment/Audience', program.segment, 'text')}
+        ${inputField(program, 'subSegment', 'Sub Category Segment/Audience', program.subSegment, 'text')}
+        ${channelField(program)}
+        ${selectField(program, 'content', 'Primary Content / Messaging', program.content || 'Thought leadership', contentCategories)}
+        ${selectField(program, 'secondaryContent', 'Secondary Content / Messaging', program.secondaryContent || 'Solution proof', contentCategories)}
+        ${selectField(program, 'mode', 'Benchmark Mode', isCustomerBenchmarkMode(program.mode) ? customerBenchmarkMode : 'Standard', ['Standard', customerBenchmarkMode])}
+        ${inputField(program, 'accounts', 'Accounts Targeted', program.accounts, 'number', { min: 0, step: 1 })}
+        ${inputField(program, 'dealSize', 'Average Deal Size', program.dealSize, 'number', { min: 0, step: 1000 })}
+        ${inputField(program, 'projectedBoards', 'Projected Live Boards', program.projectedBoards || 0, 'number', { min: 0, step: 1 })}
+        ${textareaField(program, 'notes', 'Notes', program.notes)}
+      </div>
+      <div class="benchmarks">
+        <div class="benchmark-head">
+          <h3>${isCustomerBenchmarkMode(program.mode) ? 'Customer benchmarks' : 'Standard benchmarks'}</h3>
+          <button class="ghost-btn" type="button" ${program.locked ? 'disabled' : ''} onclick="resetBenchmarks('${program.id}', this)">Reset to standard</button>
+        </div>
+        <div class="benchmark-grid">
+          ${inputField(program, 'custom.inMarket', 'In market %', Math.round(program.custom.inMarket * 100), 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'custom.engaged', 'Engage %', Math.round(program.custom.engaged * 100), 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'custom.meeting', 'Meeting %', Math.round(program.custom.meeting * 100), 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'custom.pipeline', 'Pipeline %', Math.round(program.custom.pipeline * 100), 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'custom.close', 'Close %', Math.round(program.custom.close * 100), 'number', { min: 0, step: 1 })}
+        </div>
+        <p class="hint">Editing any benchmark automatically switches Benchmark Mode to Customer. In Standard mode, the planner uses 100%, 30%, 10%, 50%, and 30%.</p>
+      </div>
+      <div class="actuals-panel">
+        <h3>Actuals against projection</h3>
+        <p class="hint">Populate actuals as programs launch. Attainment compares each actual value against the current modeled benchmark output.</p>
+        <div class="actuals-grid">
+          ${inputField(program, 'actual.liveBoards', 'Published Boards', actual.liveBoards, 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'actual.engaged', 'Actual Engaged', actual.engaged, 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'actual.meetings', 'Actual Meetings', actual.meetings, 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'actual.pipelineOpps', 'Actual Pipeline Opps', actual.pipelineOpps, 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'actual.closedDeals', 'Actual Closed Deals', actual.closedDeals, 'number', { min: 0, step: 1 })}
+          ${inputField(program, 'actual.pipelineGoal', 'Actual Pipeline', actual.pipelineGoal, 'number', { min: 0, step: 1000 })}
+          ${inputField(program, 'actual.bookings', 'Actual Bookings', actual.bookings, 'number', { min: 0, step: 1000 })}
+        </div>
+        <div class="tracking-strip" id="actualTracking-${program.id}">${actualTrackingHtml(program)}</div>
+      </div>
+      <div class="waterfall-preview" id="waterfallPreview" aria-label="Waterfall preview">${waterfallPreview(program)}</div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="secondary-btn" type="button" ${program.locked ? 'disabled' : ''} onclick="removeProgram('${program.id}', this)">Remove program</button>
+      </div>`;
+  }
+
+  function actualTrackingHtml(program) {
+    const c = calculate(program);
+    const actual = c.actual;
+    return `
+      <span><em>Published Boards</em><strong>${whole.format(actual.liveBoards)} / ${whole.format(c.projectedBoards)} · ${pct.format(c.attainment.liveBoards)}</strong></span>
+      <span><em>Meeting attainment</em><strong>${whole.format(actual.meetings)} / ${whole.format(c.meetings)} · ${pct.format(c.attainment.meetings)}</strong></span>
+      <span><em>Pipeline attainment</em><strong>${money(actual.pipelineGoal)} / ${money(c.pipelineGoal)} · ${pct.format(c.attainment.pipelineGoal)}</strong></span>
+      <span><em>Bookings attainment</em><strong>${money(actual.bookings)} / ${money(c.bookings)} · ${pct.format(c.attainment.bookings)}</strong></span>
+    `;
+  }
+
+  function renderActualTracking() {
+    const program = programs.find(p => p.id === activeId);
+    if (!program) return;
+    const target = document.getElementById(`actualTracking-${program.id}`);
+    if (target) target.innerHTML = actualTrackingHtml(program);
+  }
+
+  function waterfallPreview(program) {
+    const c = calculate(program);
+    const maxStage = Math.max(c.accounts, c.inMarket, c.engaged, c.meetings, c.pipelineOpps, c.closedDeals, 1);
+    return `
+      ${waterfallPreviewRow('Accounts targeted', c.accounts, null, c.accounts, maxStage)}
+      ${waterfallPreviewRow('Accounts in market', c.inMarket, c.b.inMarket, c.inMarket, maxStage)}
+      ${waterfallPreviewRow('Engaged accounts', c.engaged, c.b.engaged, c.engaged, maxStage)}
+      ${waterfallPreviewRow('Sales meetings', c.meetings, c.b.meeting, c.meetings, maxStage)}
+      ${waterfallPreviewRow('Pipeline opps', c.pipelineOpps, c.b.pipeline, c.pipelineOpps, maxStage)}
+      ${waterfallPreviewRow('Closed deals', c.closedDeals, c.b.close, c.closedDeals, maxStage)}
+      ${waterfallPreviewRow('Projected live boards', c.projectedBoards, null, c.projectedBoards, Math.max(maxStage, c.projectedBoards, 1))}
+      ${waterfallPreviewRow('Published Boards', `${whole.format(c.actual.liveBoards)} · ${pct.format(c.attainment.liveBoards)}`, null, c.actual.liveBoards, Math.max(maxStage, c.projectedBoards, c.actual.liveBoards, 1))}
+      ${waterfallPreviewRow('Pipeline goal', money(c.pipelineGoal), null, c.pipelineOpps, maxStage)}
+      ${waterfallPreviewRow('Actual pipeline', `${money(c.actual.pipelineGoal)} · ${pct.format(c.attainment.pipelineGoal)}`, null, c.actual.pipelineOpps, maxStage)}
+      ${waterfallPreviewRow('Bookings', money(c.bookings), null, c.closedDeals, maxStage)}
+    `;
+  }
+
+  function renderWaterfallPreview() {
+    const preview = document.getElementById('waterfallPreview');
+    const program = programs.find(p => p.id === activeId);
+    if (preview && program) preview.innerHTML = waterfallPreview(program);
+  }
+
+  function waterfallPreviewRow(label, value, benchmark, stage, maxStage) {
+    const width = Math.max(3, Math.min(100, (Number(stage) || 0) / maxStage * 100));
+    const display = typeof value === 'number' ? whole.format(value) : value;
+    const bench = benchmark === null ? '' : pct.format(benchmark);
+    return `<div class="waterfall-row">
+      <span>${label}${bench ? ` · ${bench}` : ''}</span>
+      <div class="bar"><span style="width:${width}%"></span></div>
+      <strong>${display}</strong>
+    </div>`;
+  }
+
+  function resetBenchmarks(id, button) {
+    const program = programs.find(p => p.id === id);
+    if (!program) return;
+    if (program.locked) return;
+    program.custom = { ...standardBenchmarks };
+    render();
+    persistStateDebounced();
+    flzAnalytic('cta_click', { text: button.innerText.trim(), area: 'program planner' }, button);
+    safeAnalytic('model_update', { text: 'Reset benchmarks', area: 'program planner', value: 'standard' });
+  }
+
+  function renderTotals() {
+    const t = totals();
+    const visiblePeriods = visiblePeriodTotals();
+    const orderPreview = document.getElementById('quarterOrderPreview');
+    const activeYear = document.getElementById('plan-activeYear');
+    const startQuarter = document.getElementById('plan-startQuarter');
+    if (orderPreview) orderPreview.value = quarterSequence().join(' -> ');
+    if (activeYear) activeYear.value = planSettings.activeYear;
+    if (startQuarter) startQuarter.value = planSettings.startQuarter;
+    document.getElementById('totalPrograms').textContent = whole.format(programs.length);
+    document.getElementById('totalPipeline').textContent = money(t.pipelineGoal);
+    document.getElementById('totalBookings').textContent = money(t.bookings);
+    document.getElementById('totalMeetings').textContent = whole.format(t.meetings);
+    document.getElementById('quarterRollup').innerHTML = visiblePeriods.map((period, index) => {
+      const { label, programs: quarterPrograms, totals: qt } = period;
+      return `
+      <article class="quarter-card">
+        <h3>${label}</h3>
+        <p>Quarter only · ${whole.format(quarterPrograms.length)} programs</p>
+        <strong>${money(qt.pipelineGoal)} pipeline</strong>
+        <div class="quarter-metrics">
+          <div><span>Projected boards</span><b>${whole.format(qt.projectedBoards)}</b></div>
+          <div><span>Published Boards</span><b>${whole.format(qt.actualLiveBoards)}</b></div>
+          <div><span>Board growth</span><b>${boardGrowth(visiblePeriods, index)}</b></div>
+          <div><span>Meetings</span><b>${whole.format(qt.meetings)}</b></div>
+          <div><span>Opps</span><b>${whole.format(qt.pipelineOpps)}</b></div>
+          <div><span>Closed</span><b>${whole.format(qt.closedDeals)}</b></div>
+          <div><span>Bookings</span><b>${money(qt.bookings)}</b></div>
+        </div>
+      </article>`;
+    }).join('');
+    document.getElementById('portfolioCards').innerHTML = [
+      ['Account coverage', [['Accounts targeted', whole.format(t.accounts)], ['Accounts in market', whole.format(t.inMarket)], ['Engaged accounts', whole.format(t.engaged)]]],
+      ['Conversion output', [['Sales meetings', whole.format(t.meetings)], ['Pipeline opportunities', whole.format(t.pipelineOpps)], ['Closed deals', whole.format(t.closedDeals)]]],
+      ['Board scaling', [['Projected live boards', whole.format(t.projectedBoards)], ['Published Boards', whole.format(t.actualLiveBoards)], ['Published board attainment', pct.format(attainment(t.actualLiveBoards, t.projectedBoards))]]],
+      ['Actual performance', [['Actual meetings', whole.format(t.actualMeetings)], ['Actual pipeline', money(t.actualPipelineGoal)], ['Actual bookings', money(t.actualBookings)]]],
+      ['Full-year business value', [['Pipeline goal', money(t.pipelineGoal)], ['Bookings', money(t.bookings)], ['Programs modeled', whole.format(programs.length)]]]
+    ].map(([title, rows]) => `<article class="summary-card"><h3>${title}</h3><dl>${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></article>`).join('');
+    const quarterly = visiblePeriods;
+    const cumulative = cumulativeQuarterTotals();
+    const quarterAndYtdRows = quarterly.map(({ label, totals: qt }, index) => {
+      const quarterRow = `
+        <tr>
+          <td>${label} only</td>
+          <td>${whole.format(qt.programs)}</td>
+          <td>${whole.format(qt.projectedBoards)}</td>
+          <td>${whole.format(qt.actualLiveBoards)}</td>
+          <td>${whole.format(qt.meetings)}</td>
+          <td>${whole.format(qt.actualMeetings)}</td>
+          <td>${whole.format(qt.pipelineOpps)}</td>
+          <td>${whole.format(qt.closedDeals)}</td>
+          <td>${money(qt.pipelineGoal)}</td>
+          <td>${money(qt.actualPipelineGoal)}</td>
+          <td>${money(qt.bookings)}</td>
+          <td>${money(qt.actualBookings)}</td>
+        </tr>`;
+      if (index === 0 || index === quarterly.length - 1) return quarterRow;
+      const ytd = cumulative[index].totals;
+      return `${quarterRow}
+        <tr class="ytd-row">
+          <td>${label} YTD</td>
+          <td>${whole.format(ytd.programs)}</td>
+          <td>${whole.format(ytd.projectedBoards)}</td>
+          <td>${whole.format(ytd.actualLiveBoards)}</td>
+          <td>${whole.format(ytd.meetings)}</td>
+          <td>${whole.format(ytd.actualMeetings)}</td>
+          <td>${whole.format(ytd.pipelineOpps)}</td>
+          <td>${whole.format(ytd.closedDeals)}</td>
+          <td>${money(ytd.pipelineGoal)}</td>
+          <td>${money(ytd.actualPipelineGoal)}</td>
+          <td>${money(ytd.bookings)}</td>
+          <td>${money(ytd.actualBookings)}</td>
+        </tr>`;
+    }).join('');
+    document.getElementById('cumulativeSummary').innerHTML = `
+      <table>
+        <thead><tr><th>Quarter / YTD view</th><th>Programs</th><th>Proj boards</th><th>Published Boards</th><th>Proj meetings</th><th>Actual meetings</th><th>Opps</th><th>Closed</th><th>Proj pipeline</th><th>Actual pipeline</th><th>Proj bookings</th><th>Actual bookings</th></tr></thead>
+        <tbody>
+          ${quarterAndYtdRows}
+          <tr class="total-row"><td>Full year</td><td>${whole.format(t.programs)}</td><td>${whole.format(t.projectedBoards)}</td><td>${whole.format(t.actualLiveBoards)}</td><td>${whole.format(t.meetings)}</td><td>${whole.format(t.actualMeetings)}</td><td>${whole.format(t.pipelineOpps)}</td><td>${whole.format(t.closedDeals)}</td><td>${money(t.pipelineGoal)}</td><td>${money(t.actualPipelineGoal)}</td><td>${money(t.bookings)}</td><td>${money(t.actualBookings)}</td></tr>
+        </tbody>
+      </table>`;
+    renderPipelineWaterfallImage(t);
+  }
+
+  function renderPipelineWaterfallImage(t) {
+    const image = document.getElementById('pipelineWaterfallImage');
+    const caption = document.getElementById('pipelineWaterfallCaption');
+    if (!image) return;
+    const svg = buildPipelineWaterfallSvg(t);
+    image.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    if (caption) {
+      caption.textContent = `${whole.format(t.programs)} programs modeled across ${quarterSequence().join('-')} · ${whole.format(t.projectedBoards)} projected live boards · ${whole.format(t.actualLiveBoards)} published boards · ${money(t.pipelineGoal)} projected pipeline · ${money(t.actualPipelineGoal)} actual pipeline.`;
+    }
+  }
+
+  function buildPipelineWaterfallSvg(t) {
+    const stages = [
+      { label: 'Accounts targeted', value: t.accounts, display: whole.format(t.accounts), color: '#0077ff' },
+      { label: 'In market', value: t.inMarket, display: whole.format(t.inMarket), color: '#00a8ff' },
+      { label: 'Engaged', value: t.engaged, display: whole.format(t.engaged), color: '#00ccff' },
+      { label: 'Sales meetings', value: t.meetings, display: whole.format(t.meetings), color: '#48bd64' },
+      { label: 'Pipeline opps', value: t.pipelineOpps, display: whole.format(t.pipelineOpps), color: '#7c5cff' },
+      { label: 'Closed deals', value: t.closedDeals, display: whole.format(t.closedDeals), color: '#ff469e' }
+    ];
+    const max = Math.max(...stages.map(stage => stage.value), 1);
+    const chartWidth = 940;
+    const left = 210;
+    const top = 132;
+    const rowGap = 66;
+    const maxBar = 560;
+    const minBar = 16;
+    const rows = stages.map((stage, index) => {
+      const width = Math.max(stage.value > 0 ? minBar : 0, Math.round((stage.value / max) * maxBar));
+      const y = top + index * rowGap;
+      const next = index < stages.length - 1
+        ? `<path d="M ${left + width + 8} ${y + 18} C ${left + width + 42} ${y + 18}, ${left + 56} ${y + rowGap + 18}, ${left + 90} ${y + rowGap + 18}" fill="none" stroke="#b8d8ec" stroke-width="2.5" stroke-dasharray="7 8"/>`
+        : '';
+      return `
+        <text x="50" y="${y + 23}" fill="#2c3d59" font-size="18" font-weight="800">${escapeHtml(stage.label)}</text>
+        <rect x="${left}" y="${y}" width="${width}" height="38" rx="19" fill="${stage.color}"/>
+        <text x="${left + width + 20}" y="${y + 25}" fill="#071428" font-size="19" font-weight="900">${escapeHtml(stage.display)}</text>
+        ${next}`;
+    }).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 ${chartWidth} 620">
+      <title id="title">Cumulative pipeline waterfall</title>
+      <desc id="desc">Full-year cumulative program waterfall from accounts targeted to closed deals, pipeline, and bookings.</desc>
+      <rect width="${chartWidth}" height="620" rx="24" fill="#f8fbfe"/>
+      <rect x="24" y="24" width="892" height="572" rx="22" fill="#ffffff" stroke="#d8ecfa"/>
+      <text x="50" y="70" fill="#0077ff" font-size="16" font-weight="900" letter-spacing="2">CUMULATIVE PIPELINE WATERFALL</text>
+      <text x="50" y="104" fill="#071428" font-size="28" font-weight="900">Full-year program detail</text>
+      ${rows}
+      <rect x="50" y="542" width="392" height="38" rx="19" fill="#eaf7ff"/>
+      <text x="70" y="567" fill="#071428" font-size="17" font-weight="900">Pipeline: ${escapeHtml(money(t.pipelineGoal))}</text>
+      <rect x="470" y="542" width="392" height="38" rx="19" fill="#eaf8ee"/>
+      <text x="490" y="567" fill="#071428" font-size="17" font-weight="900">Bookings: ${escapeHtml(money(t.bookings))}</text>
+    </svg>`;
+  }
+
+  function renderSections() {
+    const target = document.getElementById('waterfallSections');
+    if (!programs.length) {
+      target.innerHTML = '<div class="empty">Add a program type to generate the first waterfall section.</div>';
+      return;
+    }
+    target.innerHTML = visiblePeriodTotals().map(period => {
+      const { year, quarter, label } = period;
+      const quarterPrograms = programsForPeriod(year, quarter);
+      const qt = totals(quarterPrograms);
+      const cards = quarterPrograms.length ? quarterPrograms.map((p, index) => {
+      const c = calculate(p);
+      const rows = [
+        ['Accounts targeted actively', whole.format(c.accounts), 'Customer input'],
+        ['Accounts in market', whole.format(c.inMarket), pct.format(c.b.inMarket)],
+        ['Engaged accounts', whole.format(c.engaged), pct.format(c.b.engaged)],
+        ['Sales meetings scheduled', whole.format(c.meetings), pct.format(c.b.meeting)],
+        ['Pipeline opportunities', whole.format(c.pipelineOpps), pct.format(c.b.pipeline)],
+        ['Closed deals', whole.format(c.closedDeals), pct.format(c.b.close)],
+        ['Projected live boards', whole.format(c.projectedBoards), 'Board creation plan'],
+        ['Published Boards', whole.format(c.actual.liveBoards), `${pct.format(c.attainment.liveBoards)} attainment`],
+        ['Average deal size', money(c.dealSize), 'Customer input'],
+        ['Pipeline goal', money(c.pipelineGoal), 'Deal size x pipeline opps'],
+        ['Actual pipeline', money(c.actual.pipelineGoal), `${pct.format(c.attainment.pipelineGoal)} attainment`],
+        ['Bookings', money(c.bookings), 'Deal size x closed deals']
+      ];
+      return `<article class="program-section">
+        <header>
+          <span class="chip">${escapeHtml(periodLabel(p.programYear || year, p.quarter || quarter))} · Program ${index + 1}</span>
+          <h3>${escapeHtml(p.type)}${p.name ? ` · ${escapeHtml(p.name)}` : ''}</h3>
+          <div class="meta">
+            <span class="chip">CSM: ${escapeHtml(selectedCsm)}</span>
+            <span class="chip">${escapeHtml(isCustomerBenchmarkMode(p.mode) ? customerBenchmarkMode : 'Standard')} benchmarks</span>
+            ${p.segment ? `<span class="chip">${escapeHtml(p.segment)}</span>` : ''}
+            ${p.subSegment ? `<span class="chip">${escapeHtml(p.subSegment)}</span>` : ''}
+            ${normalizeChannels(p.channels).map(channel => `<span class="chip">${escapeHtml(channel)}</span>`).join('')}
+          </div>
+          <div class="program-value-strip" aria-label="Program value summary">
+            <span><em>Live boards</em><strong>${whole.format(c.actual.liveBoards)} / ${whole.format(c.projectedBoards)}</strong></span>
+            <span><em>Closed deals</em><strong>${whole.format(c.closedDeals)}</strong></span>
+            <span><em>Pipeline</em><strong>${money(c.pipelineGoal)}</strong></span>
+            <span><em>Actual pipeline</em><strong>${money(c.actual.pipelineGoal)}</strong></span>
+            <span><em>Bookings</em><strong>${money(c.bookings)}</strong></span>
+          </div>
+        </header>
+        <table>
+          <thead><tr><th>Waterfall metric</th><th>Value</th><th>Benchmark / formula</th></tr></thead>
+          <tbody>${rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join('')}</tbody>
+        </table>
+        ${p.content || p.secondaryContent || p.notes ? `<div class="note-row"><strong>Program detail:</strong> ${escapeHtml([p.content, p.secondaryContent, p.notes].filter(Boolean).join(' · '))}</div>` : ''}
+      </article>`;
+      }).join('') : '<div class="empty">No programs planned for this quarter yet.</div>';
+      return `<section class="quarter-section" aria-label="${label} program waterfalls">
+        <header>
+          <h3>${label}</h3>
+          <p>${whole.format(quarterPrograms.length)} programs · ${whole.format(qt.actualLiveBoards)} published boards · ${money(qt.pipelineGoal)} projected pipeline · ${money(qt.actualPipelineGoal)} actual pipeline</p>
+        </header>
+        <div class="sections-grid">${cards}</div>
+      </section>`;
+    }).join('');
+  }
+
+  function slideExportPayload() {
+    const fullYear = totals();
+    return {
+      exportedAt: new Date().toISOString(),
+      customerHeadline: document.getElementById('hero-title').textContent.trim(),
+      customerSuccessManager: selectedCsm,
+      planSettings: { ...planSettings, quarterOrder: quarterSequence() },
+      slidesDeckUrl,
+      sheetsOutputUrl,
+      fullYear,
+      quarters: visiblePeriodTotals().map(({ year, quarter, label, programs: quarterPrograms, totals: qt }) => ({
+        year,
+        quarter,
+        label,
+        programCount: quarterPrograms.length,
+        totals: qt
+      })),
+      cumulative: cumulativeQuarterTotals(),
+      programs: programs.map((program, index) => ({
+        index: index + 1,
+        id: program.id,
+        programYear: String(program.programYear || planSettings.activeYear),
+        quarter: program.quarter || 'Q1',
+        period: periodLabel(program.programYear || planSettings.activeYear, program.quarter || 'Q1'),
+        type: program.type,
+        name: program.name,
+        segment: program.segment,
+        subSegment: program.subSegment,
+        channels: normalizeChannels(program.channels),
+        channelsText: channelsLabel(program.channels),
+        content: program.content,
+        secondaryContent: program.secondaryContent,
+        notes: program.notes,
+        benchmarkMode: isCustomerBenchmarkMode(program.mode) ? customerBenchmarkMode : 'Standard',
+        assumptions: benchmarkFor(program),
+        calculations: calculate(program)
+      }))
+    };
+  }
+
+  function customerNameForSheet() {
+    return customerNameFromHero();
+  }
+
+  function sheetExportPayload() {
+    const base = slideExportPayload();
+    const customerProgramHeaders = [
+      'Program #', '+ Program Type', 'Program Name', 'Segment / Audience', 'Channels', 'Content / Messaging', 'Notes',
+      'Benchmark Mode', 'Accounts Targeted', 'Avg Deal Size', 'Std In-Market %', 'Std Engage %', 'Std Meeting %',
+      'Std Pipeline %', 'Std Close %', 'Customer In-Market %', 'Customer Engage %', 'Customer Meeting %', 'Customer Pipeline %',
+      'Customer Close %', 'Selected In-Market %', 'Selected Engage %', 'Selected Meeting %', 'Selected Pipeline %',
+      'Selected Close %', 'Accounts In Market', 'Engaged Accounts', 'Sales Meetings', 'Pipeline Opps', 'Closed Deals',
+      'Pipeline Goal', 'Bookings', 'Quarter', 'Program Year', 'Projected Live Boards', 'Published Boards', 'Actual Engaged',
+      'Actual Meetings', 'Actual Pipeline Opps', 'Actual Closed Deals', 'Actual Pipeline', 'Actual Bookings',
+      'Published Board Attainment', 'Pipeline Attainment', 'Bookings Attainment'
+    ];
+    return {
+      ...base,
+      customerName: customerNameForSheet(),
+      outputWorkbookUrl: '',
+      templateWorkbookUrl: sheetTemplateUrl,
+      sheetBuilderEndpoint,
+      templateSourceTabs: ['Programs and KPIs', 'Customer Program Form'],
+      outputTabs: {
+        customerProgramForm: {
+          tabName: 'Customer Program Form',
+          title: `${customerNameForSheet()} Program Waterfall Form`,
+          headers: customerProgramHeaders,
+          rows: base.programs.map(program => [
+            program.index,
+            program.type,
+            program.name,
+            [program.segment, program.subSegment].filter(Boolean).join(' / '),
+            program.channelsText,
+            [program.content, program.secondaryContent].filter(Boolean).join(' / '),
+            program.notes,
+            program.benchmarkMode,
+            program.calculations.accounts,
+            program.calculations.dealSize,
+            standardBenchmarks.inMarket,
+            standardBenchmarks.engaged,
+            standardBenchmarks.meeting,
+            standardBenchmarks.pipeline,
+            standardBenchmarks.close,
+            isCustomerBenchmarkMode(program.benchmarkMode) ? program.assumptions.inMarket : '',
+            isCustomerBenchmarkMode(program.benchmarkMode) ? program.assumptions.engaged : '',
+            isCustomerBenchmarkMode(program.benchmarkMode) ? program.assumptions.meeting : '',
+            isCustomerBenchmarkMode(program.benchmarkMode) ? program.assumptions.pipeline : '',
+            isCustomerBenchmarkMode(program.benchmarkMode) ? program.assumptions.close : '',
+            program.assumptions.inMarket,
+            program.assumptions.engaged,
+            program.assumptions.meeting,
+            program.assumptions.pipeline,
+            program.assumptions.close,
+            program.calculations.inMarket,
+            program.calculations.engaged,
+            program.calculations.meetings,
+            program.calculations.pipelineOpps,
+            program.calculations.closedDeals,
+            program.calculations.pipelineGoal,
+            program.calculations.bookings,
+            program.quarter,
+            program.programYear,
+            program.calculations.projectedBoards,
+            program.calculations.actual.liveBoards,
+            program.calculations.actual.engaged,
+            program.calculations.actual.meetings,
+            program.calculations.actual.pipelineOpps,
+            program.calculations.actual.closedDeals,
+            program.calculations.actual.pipelineGoal,
+            program.calculations.actual.bookings,
+            program.calculations.attainment.liveBoards,
+            program.calculations.attainment.pipelineGoal,
+            program.calculations.attainment.bookings
+          ])
+        },
+        programsAndKpis: {
+          tabName: 'Programs and KPIs',
+          sections: base.programs.map(program => ({
+            heading: `Segment/ Program ${program.index}: ${program.type}`,
+            programName: program.name,
+            description: program.notes,
+            programYear: program.programYear,
+            quarter: program.quarter,
+            period: program.period,
+            channels: program.channels,
+            channelsText: program.channelsText,
+            primaryContent: program.content,
+            secondaryContent: program.secondaryContent,
+            metrics: [
+              ['Number of accounts targeted actively', program.calculations.accounts, '', ''],
+              ['Number of accounts in market', program.calculations.inMarket, program.assumptions.inMarket, '% accounts in market'],
+              ['Number of engaged accounts', program.calculations.engaged, program.assumptions.engaged, '% conversion from in market to engaged'],
+              ['Number of sales meetings scheduled', program.calculations.meetings, program.assumptions.meeting, '% conversion from engaged to sales meeting'],
+              ['Number of sales meetings that go into pipeline', program.calculations.pipelineOpps, program.assumptions.pipeline, '% conversion from sales meeting to pipeline'],
+              ['Number of deals closed', program.calculations.closedDeals, program.assumptions.close, '% conversion from pipeline to deal close'],
+              ['Projected live boards', program.calculations.projectedBoards, '', 'Board creation plan'],
+              ['Published Boards', program.calculations.actual.liveBoards, program.calculations.attainment.liveBoards, 'Published board attainment'],
+              ['Deal size', program.calculations.dealSize, '', ''],
+              ['Pipeline goal', program.calculations.pipelineGoal, '', ''],
+              ['Actual pipeline', program.calculations.actual.pipelineGoal, program.calculations.attainment.pipelineGoal, 'Actual vs projected pipeline'],
+              ['Bookings', program.calculations.bookings, '', '']
+            ]
+          }))
+        }
+      }
+    };
+  }
+
+  function downloadJson(filename, payload) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function canUseSheetBuilder() {
+    return Boolean(sheetBuilderEndpoint && !sheetBuilderEndpoint.includes('PLACEHOLDER'));
+  }
+
+  function submitSheetBuilder(payload) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = sheetBuilderEndpoint;
+    form.target = '_blank';
+    form.style.display = 'none';
+    const input = document.createElement('textarea');
+    input.name = 'payload';
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+  }
+
+  function exportSlideContent(button) {
+    const payload = slideExportPayload();
+    downloadJson('folloze-program-kpi-slide-output.json', payload);
+    if (slidesDeckUrl && !slidesDeckUrl.includes('PLACEHOLDER')) {
+      window.open(slidesDeckUrl, '_blank', 'noopener');
+    }
+    const original = button.textContent;
+    button.textContent = 'Slides output ready';
+    setTimeout(() => { button.textContent = original; }, 1800);
+    flzAnalytic('cta_click', { text: original.trim(), area: 'slide output' }, button);
+    safeAnalytic('slides_export', { text: 'Google Slides output', area: 'slide output', deckUrl: slidesDeckUrl });
+  }
+
+  function exportSheetContent(button) {
+    const payload = sheetExportPayload();
+    const original = button.textContent;
+    if (canUseSheetBuilder()) {
+      submitSheetBuilder(payload);
+      button.textContent = 'Creating customer sheet';
+    } else {
+      button.textContent = 'Sheet builder setup needed';
+      safeAnalytic('sheets_export_blocked', { text: 'Sheet builder endpoint missing', area: 'sheet output', customerName: payload.customerName });
+    }
+    setTimeout(() => { button.textContent = original; }, 1800);
+    flzAnalytic('cta_click', { text: original.trim(), area: 'sheet output' }, button);
+    safeAnalytic('sheets_export', { text: 'Google Sheets output', area: 'sheet output', sheetBuilderConfigured: String(canUseSheetBuilder()) });
+  }
+
+  const pdfLibraryUrl = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+  let pdfLibraryPromise = null;
+
+  function loadPdfLibrary() {
+    if (window.html2pdf) return Promise.resolve();
+    if (pdfLibraryPromise) return pdfLibraryPromise;
+    pdfLibraryPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = pdfLibraryUrl;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('PDF generator failed to load'));
+      document.body.appendChild(script);
+    });
+    return pdfLibraryPromise;
+  }
+
+  function pdfFileName() {
+    const name = customerNameForSheet();
+    const base = name === 'Customer' ? 'folloze-joint-deployment-program-template-board' : `${name}-joint-deployment-program`;
+    return `${base.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}.pdf`;
+  }
+
+  async function exportPdfContent(button) {
+    const original = button.textContent;
+    button.textContent = 'Building PDF';
+    button.disabled = true;
+    flzAnalytic('cta_click', { text: original.trim(), area: 'pdf output' }, button);
+    safeAnalytic('pdf_export_start', { text: 'Full board PDF export', area: 'pdf output', customerName: customerNameForSheet() });
+    try {
+      await loadPdfLibrary();
+      document.body.classList.add('pdf-exporting');
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const source = document.getElementById('main');
+      const options = {
+        margin: [0.25, 0.25, 0.25, 0.25],
+        filename: pdfFileName(),
+        image: { type: 'jpeg', quality: 0.96 },
+        html2canvas: { scale: 1.6, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, windowWidth: 840 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.stat', '.summary-card', '.quarter-card', '.quarter-section', '.visual-card', '.program-section', '.waterfall-row'] }
+      };
+      await window.html2pdf().set(options).from(source).save();
+      safeAnalytic('pdf_export_complete', { text: 'Full board PDF downloaded', area: 'pdf output', customerName: customerNameForSheet() });
+      button.textContent = 'PDF downloaded';
+    } catch (error) {
+      console.error(error);
+      button.textContent = 'PDF unavailable';
+      safeAnalytic('pdf_export_error', { text: error.message || 'PDF export failed', area: 'pdf output', customerName: customerNameForSheet() });
+    } finally {
+      document.body.classList.remove('pdf-exporting');
+      setTimeout(() => {
+        button.textContent = original;
+        button.disabled = false;
+      }, 1800);
+    }
+  }
+
+  function render() {
+    renderTabs();
+    renderEditor();
+    renderTotals();
+    renderSections();
+  }
+
+  function renderLiveOutputs() {
+    renderTabs();
+    renderTotals();
+    renderWaterfallPreview();
+    renderActualTracking();
+    renderSections();
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  if (!restoreLocalState()) render();
+  loadRemoteState();
+</script>
+</body>
+</html>

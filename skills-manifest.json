@@ -39,6 +39,13 @@
       "requires_restart": true
     },
     {
+      "name": "folloze-program-kpi-waterfall-board",
+      "path": "Skills/Troy Folloze Created Skills/Program KPI Waterfall/folloze-program-kpi-waterfall-board",
+      "description": "Build and save interactive Folloze MCP boards for program KPI waterfall planning with customer logo placement, quarterly program sections, benchmarks, actuals, durable state, and customer access controls.",
+      "enabled": true,
+      "requires_restart": true
+    },
+    {
       "name": "linkedin-operator-content",
       "path": "Skills/linkedin-operator-content",
       "description": "Use when the user wants LinkedIn content ideas, post outlines, article drafts, or recurring content generation for a growth-oriented operator voice across martech, SaaS, startups, customer success, leadership, AI, recruiting, professional services, account management, support, net revenue retention, and upsells. Also use when the output should be delivered through Slack and or email.",
@@ -56,6 +63,13 @@
       "name": "playwright",
       "path": "Skills/playwright",
       "description": "Use when the task requires automating a real browser from the terminal via playwright-cli or the bundled wrapper script.",
+      "enabled": true,
+      "requires_restart": true
+    },
+    {
+      "name": "program-kpi-waterfall-workbook",
+      "path": "Skills/Troy Folloze Created Skills/Program KPI Waterfall/program-kpi-waterfall-workbook",
+      "description": "Build Excel or Google Sheets-ready program KPI waterfall workbooks for customer program planning from the Folloze Programs and KPI model.",
       "enabled": true,
       "requires_restart": true
     },

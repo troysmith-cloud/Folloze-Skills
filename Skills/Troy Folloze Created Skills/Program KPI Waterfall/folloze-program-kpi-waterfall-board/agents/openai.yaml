@@ -1,0 +1,5 @@
+interface:
+  display_name: "Folloze KPI Board"
+  short_description: "Build Folloze KPI boards."
+  default_prompt: "Use $folloze-program-kpi-waterfall-board to build and save a Folloze program KPI waterfall board."
+
