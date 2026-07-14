@@ -196,7 +196,7 @@ NODE /absolute/path/to/copied-board.html
 
 Use `save_folloze_board_from_file` with:
 
-- `name`: `Folloze Deployment Planning & Program Workspace` for the reusable or customer-specific JDP planning workspace unless the user explicitly requests a different board name
+- `name`: `Folloze Deployment Planning & Program Planner` for reusable or customer-specific JDP planning boards unless the user explicitly requests a different board name
 - `path`: absolute path to the QA'd local HTML file
 - `themeId`: returned from `get_company_theme`
 - `analyticsAcknowledgements.readGuide`: true only after reading the MCP guide
